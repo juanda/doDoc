@@ -61,3 +61,9 @@
     git=http://github.com/symfony/AsseticBundle.git
     target=/bundles/Symfony/Bundle/AsseticBundle
     version=origin/2.0
+
+[dflydev/markdown]
+    git=http://github.com/dflydev/dflydev-markdown.git
+    target=dflydev/markdown
+    version=dev-master
+

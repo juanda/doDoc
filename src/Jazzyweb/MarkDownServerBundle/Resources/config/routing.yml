@@ -1,0 +1,5 @@
+JMDServerBundle_homepage:
+    pattern:  /tohtml
+    defaults: { _controller: JMDServerBundle:Default:toHtml }
+    requirements:
+        _method:  POST

@@ -6,7 +6,7 @@
 // ----------------------------------------------------------------------------
 myMarkdownSettings = {
     nameSpace:          'markdown', // Useful to prevent multi-instances CSS conflict
-    previewParserPath:  '~/sets/markdown/preview.php',
+    previewParserPath:  'http://localhost/doDoc/web/app_dev.php/tohtml',
     onShiftEnter:       {
         keepDefault:false, 
         openWith:'\n\n'
@@ -120,11 +120,11 @@ myMarkdownSettings = {
 
 // mIu nameSpace to avoid conflict.
 miu = {
-    markdownTitle: function(markItUp, chara) {
+    markdownTitle: function(markItUp, character) {
         heading = '';
         n = $.trim(markItUp.selection||markItUp.placeHolder).length;
         for(i = 0; i < n; i++) {
-            heading += chara;
+            heading += character;
         }
         return '\n'+heading+'\n';
     }
