@@ -15,11 +15,10 @@ class DefaultController extends Controller
         $data = $request->get('data');
         
         if ($data == '') {
-            throw $this->createNotFoundException('The product does not exist');
+            throw $this->createNotFoundException('No se ha enviado el parámetro 
+                ``data`` con el documento a convertir');
         }
-        
-        
-        
+          
         $md = $this->container->get('jmd_server.markdown.service');
         
         return new Response($md->buildHtml($data));

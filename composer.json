@@ -17,7 +17,8 @@
 
     "autoload": {
         "psr-0": {
-            "Acme": "src/"
+            "Acme": "src/",
+            "Jazzyweb": "src/"
         }
     }
 }
