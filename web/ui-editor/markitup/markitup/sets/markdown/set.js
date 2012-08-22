@@ -11,6 +11,7 @@ myMarkdownSettings = {
         keepDefault:false, 
         openWith:'\n\n'
     },
+    previewInWindow: 'width=800, height=600, resizable=yes, scrollbars=yes',
     markupSet: [
     {
         name:'First Level Heading', 
