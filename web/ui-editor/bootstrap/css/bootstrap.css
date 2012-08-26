@@ -5623,25 +5623,3 @@ a.badge:hover {
   position: fixed;
 }
 
-.littletitle[rel]:after {
-    background-color: #FFFFFF;
-    border: 1px solid #DDDDDD;
-    border-radius: 4px 0 4px 0;
-    color: #9DA0A4;
-    content: attr(rel);
-    font-size: 12px;
-    font-weight: bold;
-    left: -1px;
-    padding: 3px 7px;
-    position: absolute;
-    top: -1px;
-}
-.littletitle {
-    
-    border: 1px solid #DDDDDD;
-    border-radius: 4px 4px 4px 4px;
-   
-    padding: 39px 19px 14px;
-    position: relative;
-}
-

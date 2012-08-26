@@ -32,21 +32,21 @@
 
     <body>
 
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </a>
-                    <a class="brand" href="#">doDoc - editor</a>
-                    <div class="nav-collapse collapse">
-                        <ul class="nav">
-                            <li class="active"><a href="#">Book manager</a></li>
 
-                        </ul>
-                    </div><!--/.nav-collapse -->
+
+
+        <div class="navbar navbar-fixed-top navbar-inverse">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <p class="navbar-text pull-right">Logged as Alberto Einstein </p>
+                    <a class="brand" href="#">doDoc - editor</a>
+                    <ul class="nav">
+                        <li><a title="list and search your shared books" href="#">Book manager</a></li>
+                    
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li><button class="btn btn-danger" title="logout" href="#"><i class="icon-off"></i></button></li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -58,15 +58,15 @@
                     <div rel="Book" class="well littletitle lead">
                         <p> Curso: Desarrollo de aplicaciones web con Symfony2</p>
                         <div class="btn-group">                 
-                            <button id="btn_config_book" class="btn" title="book configuration"><i class="icon-wrench"></i></button>                    
+                            <button id="btn_config_book" class="btn" title="configure this book"><i class="icon-wrench"></i></button>                    
 
-                            <a class="btn dropdown-toggle" title="select de format and build the book" data-toggle="dropdown" href="#">
+                            <a class="btn dropdown-toggle" title="select the format and build this book" data-toggle="dropdown" href="#">
                                 <i class="icon-cog"></i>
                                 build to:
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="#">web</a></li>
+                                <li><a href="#">HTML</a></li>
                                 <li><a href="#">PDF</a></li>
                                 <li><a href="#">EPUB</a></li>
                             </ul>
@@ -90,8 +90,16 @@
                                 <button id="btn_del_doc" class="btn" title="remove document"><i class="icon-remove-sign"></i></button>                   
                             </div>
                             <div class="btn-group">
-                                <button id="btn_download_rst" class="btn" title="download document in markdown format"><i class="icon-download-alt"></i> rst</button>
-                                <button id="btn_download_pdf" class="btn" title="download document in pdf format"><i class="icon-download-alt"></i> pdf</button>                   
+                                <a class="btn dropdown-toggle" title="select a format and download the document in such format" data-toggle="dropdown" href="#">
+                                    <i class="icon-download-alt"></i>
+                                    download
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">HTML</a></li>
+                                    <li><a href="#">PDF</a></li>
+                                    <li><a href="#">EPUB</a></li>
+                                </ul>
                             </div>
                         </div>
 
@@ -112,7 +120,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
 
 
