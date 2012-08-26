@@ -3,3 +3,9 @@ JMDServerBundle_homepage:
     defaults: { _controller: JMDServerBundle:Default:toHtml }
     requirements:
         _method:  POST
+
+JMDPruebapost:
+    pattern: /doc/{book}/{name}
+    defaults: { _controller: JMDServerBundle:Default:pruebaPOST}
+    requirements:
+       _method: POST

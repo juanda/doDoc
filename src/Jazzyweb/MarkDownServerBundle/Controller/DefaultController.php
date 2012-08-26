@@ -23,5 +23,13 @@ class DefaultController extends Controller
         
         return new Response($md->buildHtml($data));
     }
+    
+    public function pruebaPOSTAction()
+    {
+        echo '<pre>';
+        print_r($this->getRequest());
+        echo '</pre>';
+        exit;
+    }
 
 }
