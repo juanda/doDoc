@@ -1,0 +1,35 @@
+JazzywebdoDocBundle_api_rest_get_collection:
+   pattern:  /docs/{book}
+   defaults: { _controller: JazzywebdoDocBundle:Default:getAllDocuments }
+   requirements:
+     _method: GET
+     _format: json
+
+JazzywebdoDocBundle_api_rest_get_doc:
+   pattern: /docs/{book}/{name}
+   defaults: { _controller: JazzywebdoDocBundle:Default:getDocument }
+   requirements:
+     _method: GET
+     _format: json
+
+JazzywebdoDocBundle_api_rest_post_doc:
+   pattern: /docs/{book}
+   defaults: { _controller: JazzywebdoDocBundle:Default:newDocument }
+   requirements:
+     _method: POST
+     _format: json
+    
+JazzywebdoDocBundle_api_rest_put_doc:
+   pattern: /docs/{book}/{name}
+   defaults: { _controller: JazzywebdoDocBundle:Default:updateDocument }
+   requirements:
+     _method: PUT
+     _format: json
+
+JazzywebdoDocBundle_api_rest_delete_doc:
+   pattern: /docs/{book}/{name}
+   defaults: { _controller: JazzywebdoDocBundle:Default:removeDocument }
+   requirements:
+     _method: DELETE
+     _format: json
+ 

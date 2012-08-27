@@ -1,0 +1,8 @@
+parameters:
+    jazzyweb.dodocmanager.class: Jazzyweb\doDocBundle\Services\doDocManager
+
+services:
+    jazzyweb.dodocmanager:
+        class: %jazzyweb.dodocmanager.class%
+        arguments:
+         - "@doctrine"         
