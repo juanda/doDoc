@@ -3,6 +3,7 @@
 namespace Jazzyweb\doDocBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class DefaultController extends Controller
@@ -22,6 +23,9 @@ class DefaultController extends Controller
         
         $documents = $docService->getAllDocuments($bookCode);
         
-        return new Response(json_encode($documents));
+        $response = new Response(json_encode($documents));
+        $response->headers->set('Content-Type', 'application/json');
+        
+        return $response;
     }
 }
