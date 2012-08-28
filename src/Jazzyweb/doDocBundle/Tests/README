@@ -1,0 +1,3 @@
+This test suite have been built taken into account that the *doDocManager* 
+service is properly configured and exists a book named ``test-for-dodoc`` with
+at least the following documents: ``chapter1.md``, ``chapter2.md``
