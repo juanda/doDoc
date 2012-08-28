@@ -58,7 +58,7 @@ class DefaultControllerTest extends WebTestCase {
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testGetDocumentWhichNonExitsInExistingBook() {
+    public function testGetDocumentWhichDoesntExistInExistingBook() {
 // requesting all the documents of a non existent book
         $crawler = $this->client->request('GET', '/book/test-for-dodoc/docs/chapter112.md');
 
@@ -78,6 +78,29 @@ class DefaultControllerTest extends WebTestCase {
         $finder->remove($this->docDir . '/test-for-dodoc/' . $this->contentsDirname . '/chapter_new.md');
     }
 
+    public function testNewDocumentWithContentOK() {
+        $crawler = $this->client->request('POST',
+                        '/book/test-for-dodoc/docs/chapter_new.md',
+                        array(),
+                        array(),
+                        array(),
+                        json_encode(array('content' => 'El perro de san roque no tiene rabo')));
+
+        $this->assertTrue($this->client->getResponse()->headers->contains('Content-Type', 'application/json'));
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertRegExp('/chapter_new.md/', $this->client->getResponse()->getContent());
+
+        $file = $this->docDir . '/test-for-dodoc/' . $this->contentsDirname . '/chapter_new.md';
+
+        $content = \file_get_contents($file);
+
+        $this->assertRegExp('/El perro de san roque no tiene rabo/', $content);
+
+        // This is to make the test idempotent
+        $finder = new \Symfony\Component\Filesystem\Filesystem();
+        $finder->remove($file);
+    }
+
     public function testNewDocumentFailsFileExists() {
         $crawler = $this->client->request('POST', '/book/test-for-dodoc/docs/chapter1.md');
 
@@ -87,7 +110,7 @@ class DefaultControllerTest extends WebTestCase {
     }
 
     public function testNewDocumentFailsBookNotExist() {
-        $crawler = $this->client->request('POST', '/book/estenoexiste/docs/chapter1.md');
+        $crawler = $this->client->request('POST', '/book/estenoexiste/docs/chapter45.md');
 
         $this->assertTrue($this->client->getResponse()->headers->contains('Content-Type', 'application/json'));
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
@@ -96,18 +119,61 @@ class DefaultControllerTest extends WebTestCase {
 
     public function testSaveDocumentOK() {
         $crawler = $this->client->request(
-                'PUT',
-                '/book/test-for-dodoc/docs/chapter1.md',
-                array(),
-                array(),
-                array(),
-                json_encode(array('content' => 'El perro de san roque no tiene rabo'))
+                        'PUT',
+                        '/book/test-for-dodoc/docs/chapter1.md',
+                        array(),
+                        array(),
+                        array(),
+                        json_encode(array('content' => 'El perro de san roque no tiene rabo'))
         );
 
         $this->assertTrue($this->client->getResponse()->headers->contains('Content-Type', 'application/json'));
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertRegExp('/chapter1.md/', $this->client->getResponse()->getContent());
-        
+    }
+
+    public function testSaveDocumentFailsFileDoesnExist() {
+        $crawler = $this->client->request(
+                        'PUT',
+                        '/book/test-for-dodoc/docs/chapter1828.md',
+                        array(),
+                        array(),
+                        array(),
+                        json_encode(array('content' => 'El perro de san roque no tiene rabo'))
+        );
+
+        $this->assertTrue($this->client->getResponse()->headers->contains('Content-Type', 'application/json'));
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+        $this->assertRegExp('/There is not a document named chapter1828.md/', $this->client->getResponse()->getContent());
+    }
+
+    public function testDeleteDocumentOK() {
+
+        // first of all let's create a new document to remove
+        $file = $this->docDir . '/test-for-dodoc/' . $this->contentsDirname . '/chapter_new.md';
+        \file_put_contents($file, "some text");
+
+        $crawler = $this->client->request('DELETE', '/book/test-for-dodoc/docs/chapter_new.md');
+
+        $this->assertTrue($this->client->getResponse()->headers->contains('Content-Type', 'application/json'));
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertRegExp('/has been removed/', $this->client->getResponse()->getContent());
+    }
+
+    public function testDeleteDocumentInNoExistingBook() {
+        $crawler = $this->client->request('DELETE', '/book/estenoexiste/docs/chapter_new.md');
+
+        $this->assertTrue($this->client->getResponse()->headers->contains('Content-Type', 'application/json'));
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+        $this->assertRegExp('/does not exists/', $this->client->getResponse()->getContent());
+    }
+
+    public function testDeleteDocumentWhichDoesntExist() {
+        $crawler = $this->client->request('DELETE', '/book/test-for-dodoc/docs/chapter_new.md');
+
+        $this->assertTrue($this->client->getResponse()->headers->contains('Content-Type', 'application/json'));
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->assertRegExp('/There is not a document/', $this->client->getResponse()->getContent());
     }
 
 }

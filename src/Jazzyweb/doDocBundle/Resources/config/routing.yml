@@ -14,20 +14,20 @@ JazzywebdoDocBundle_api_rest_get_doc:
     
 JazzywebdoDocBundle_api_rest_post_doc:
    pattern: /book/{book}/docs/{docname}
-   defaults: { _controller: JazzywebdoDocBundle:Default:newDocument }
+   defaults: { _controller: JazzywebdoDocBundle:Default:createOrSaveDocument }
    requirements:
      _method: POST
      _format: json
     
 JazzywebdoDocBundle_api_rest_put_doc:
    pattern: /book/{book}/docs/{docname}
-   defaults: { _controller: JazzywebdoDocBundle:Default:updateDocument }
+   defaults: { _controller: JazzywebdoDocBundle:Default:createOrSaveDocument }
    requirements:
      _method: PUT
      _format: json
 
 JazzywebdoDocBundle_api_rest_delete_doc:
-   pattern: /book/{book}/docs{docname}
+   pattern: /book/{book}/docs/{docname}
    defaults: { _controller: JazzywebdoDocBundle:Default:removeDocument }
    requirements:
      _method: DELETE

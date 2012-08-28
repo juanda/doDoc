@@ -33,12 +33,12 @@ class docManager {
 
         try {
             $iterator = $this->finder
-                    ->files()
-                    ->name('*')
-                    ->in($this->docDir . '/' . $bookCode . '/' . $this->contentsDirname)
-                    ->depth(0)
-                    ->sortByName()
-                    ->getIterator();
+                            ->files()
+                            ->name('*')
+                            ->in($this->docDir . '/' . $bookCode . '/' . $this->contentsDirname)
+                            ->depth(0)
+                            ->sortByName()
+                            ->getIterator();
         } catch (\InvalidArgumentException $e) {
 
             $out['json']['message'] = "The book " . $bookCode . " does not exists";
@@ -63,13 +63,7 @@ class docManager {
 
         $out = array();
 
-        $bookPath = $this->docDir
-                . '/' .
-                $bookCode
-                . '/' .
-                $this->contentsDirname;
-
-        $docPath = $bookPath . '/' . $docName;
+        list($bookPath, $docPath) = $this->getBookAndDocumentPath($bookCode, $docName);
 
         if (!file_exists($bookPath)) {
             $out['json']['message'] = "The book " . $bookCode . " does not exists";
@@ -90,17 +84,11 @@ class docManager {
         return $out;
     }
 
-    public function createDocument($bookCode, $docName, $user = null) {
+    public function createDocument($bookCode, $docName, $content, $user = null) {
 
         $out = array();
 
-        $bookPath = $this->docDir
-                . '/' .
-                $bookCode
-                . '/' .
-                $this->contentsDirname;
-
-        $docPath = $bookPath . '/' . $docName;
+        list($bookPath, $docPath) = $this->getBookAndDocumentPath($bookCode, $docName);
 
         if (!file_exists($bookPath)) {
             $out['json']['message'] = "The book " . $bookCode . " does not exists";
@@ -111,9 +99,11 @@ class docManager {
             $out['error'] = true;
             $out['status_code'] = 403;
         } else {
-
             try {
                 $this->fileSystem->touch($docPath);
+                if ($content) {
+                    \file_put_contents($docPath, $content);
+                }
             } catch (\ErrorException $e) {
                 $out['json']['message'] = $e->getMessage();
                 $out['error'] = true;
@@ -128,9 +118,64 @@ class docManager {
     }
 
     public function saveDocument($bookCode, $docName, $content) {
-        
+
         $out = array();
 
+        list($bookPath, $docPath) = $this->getBookAndDocumentPath($bookCode, $docName);
+
+        if (!file_exists($bookPath)) {
+            $out['json']['message'] = "The book " . $bookCode . " does not exists";
+            $out['error'] = true;
+            $out['status_code'] = 404;
+        } elseif (!file_exists($docPath)) {
+            $out['json']['message'] = "There is not a document named " . $docName . "  in book " . $bookCode;
+            $out['error'] = true;
+            $out['status_code'] = 404;
+        } else {
+
+            if (!\file_put_contents($docPath, $content)) {
+                $out['json']['message'] = "Can't write the document " . $docName . " in book " . $bookCode;
+                $out['error'] = true;
+                $out['status_code'] = 500;
+            } else {
+                $out['json']['docname'] = $docPath;
+                $out['status_code'] = 200;
+            }
+        }
+
+        return $out;
+    }
+
+    public function removeDocument($bookCode, $docName) {
+        $out = array();
+
+        list($bookPath, $docPath) = $this->getBookAndDocumentPath($bookCode, $docName);
+
+        if (!file_exists($bookPath)) {
+            $out['json']['message'] = "The book " . $bookCode . " does not exists";
+            $out['error'] = true;
+            $out['status_code'] = 404;
+        } elseif (!file_exists($docPath)) {
+            $out['json']['message'] = "There is not a document named " . $docName . "  in book " . $bookCode;
+            $out['error'] = true;
+            $out['status_code'] = 403;
+        } else {
+            try {
+                $this->fileSystem->remove($docPath);
+            } catch (\ErrorException $e) {
+                $out['json']['message'] = $e->getMessage();
+                $out['error'] = true;
+                $out['status_code'] = 500;
+                return $out;
+            }
+            $out['json']['message'] = "The document ". $docPath . "has been removed";
+            $out['status_code'] = 200;
+        }
+
+        return $out;
+    }
+
+    protected function getBookAndDocumentPath($bookCode, $docName) {
         $bookPath = $this->docDir
                 . '/' .
                 $bookCode
@@ -139,15 +184,7 @@ class docManager {
 
         $docPath = $bookPath . '/' . $docName;
 
-        if (!file_exists($bookPath)) {
-            $out['json']['message'] = "The book " . $bookCode . " does not exists";
-            $out['error'] = true;
-            $out['status_code'] = 404;
-        } elseif (file_exists($docPath)) { // the document exists
-            $out['json']['message'] = "There is a document named " . $docName . "  in book " . $bookCode;
-            $out['error'] = true;
-            $out['status_code'] = 403;
-        }
+        return array($bookPath, $docPath);
     }
 
 }
