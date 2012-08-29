@@ -1,34 +1,34 @@
 JazzywebdoDocBundle_api_rest_get_collection:
    pattern:  /book/{book}/docs
-   defaults: { _controller: JazzywebdoDocBundle:Default:getAllDocuments }
+   defaults: { _controller: JazzywebdoDocBundle:APIRest:getAllDocuments }
    requirements:
      _method: GET
      _format: json
 
 JazzywebdoDocBundle_api_rest_get_doc:
    pattern: /book/{book}/docs/{docname}
-   defaults: { _controller: JazzywebdoDocBundle:Default:getDocument }
+   defaults: { _controller: JazzywebdoDocBundle:APIRest:getDocument }
    requirements:
      _method: GET
      _format: json
     
 JazzywebdoDocBundle_api_rest_post_doc:
    pattern: /book/{book}/docs/{docname}
-   defaults: { _controller: JazzywebdoDocBundle:Default:createOrSaveDocument }
+   defaults: { _controller: JazzywebdoDocBundle:APIRest:createOrSaveDocument }
    requirements:
      _method: POST
      _format: json
     
 JazzywebdoDocBundle_api_rest_put_doc:
    pattern: /book/{book}/docs/{docname}
-   defaults: { _controller: JazzywebdoDocBundle:Default:createOrSaveDocument }
+   defaults: { _controller: JazzywebdoDocBundle:APIRest:createOrSaveDocument }
    requirements:
      _method: PUT
      _format: json
 
 JazzywebdoDocBundle_api_rest_delete_doc:
    pattern: /book/{book}/docs/{docname}
-   defaults: { _controller: JazzywebdoDocBundle:Default:removeDocument }
+   defaults: { _controller: JazzywebdoDocBundle:APIRest:removeDocument }
    requirements:
      _method: DELETE
      _format: json
