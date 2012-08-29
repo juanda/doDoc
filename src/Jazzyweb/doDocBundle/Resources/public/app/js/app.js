@@ -32,3 +32,16 @@ window.generalTools = Backbone.View.extend({
     
     el: $('#generic_tools')
 });
+
+
+window.app = Backbone.Router.extend({
+   
+   initialize: function(){
+       
+       console.log('window.app.initialize');
+       this.documentToolView = new window.documentTools;
+   }
+   
+});
+
+var app = new window.app;
