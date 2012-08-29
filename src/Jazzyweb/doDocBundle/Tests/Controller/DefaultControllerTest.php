@@ -38,7 +38,6 @@ class DefaultControllerTest extends WebTestCase {
         $crawler = $this->client->request('GET', '/book/test-for-dodoc/docs');
         $this->assertTrue($this->client->getResponse()->headers->contains('Content-Type', 'application/json'));
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertRegExp('/documents/', $this->client->getResponse()->getContent());
         $this->assertRegExp('/chapter1.md/', $this->client->getResponse()->getContent());
         $this->assertRegExp('/chapter2.md/', $this->client->getResponse()->getContent());
     }

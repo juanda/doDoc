@@ -47,9 +47,11 @@ class docManager {
             return $out;
         }
 
-
+        $i = 0;
         foreach ($iterator as $document) {
-            $out['json']['documents'][] = $document->getFilename();
+            $out['json'][$i]['name'] = $document->getFilename();
+            $out['json'][$i]['another_property'] = 'another property';
+            $i++;
         }
         $out['status_code'] = 200;
 
