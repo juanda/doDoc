@@ -32,4 +32,9 @@ JazzywebdoDocBundle_api_rest_delete_doc:
    requirements:
      _method: DELETE
      _format: json
- 
+
+JazzywebdoDocBundle_guiapp_editor:
+  pattern: /editor/{book}
+  defaults: { _controller: JazzywebdoDocBundle:GUIApp:editor }
+  requirements:
+     _method: GET
