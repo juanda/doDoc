@@ -130,7 +130,7 @@ class docManager {
         } elseif (!file_exists($docPath)) {
             $out['json']['message'] = "There is not a document named " . $docName . "  in book " . $bookCode;
             $out['error'] = true;
-            $out['status_code'] = 404;
+            $out['status_code'] = 403;
         } else {
 
             if (!\file_put_contents($docPath, $content)) {
