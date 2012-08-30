@@ -2,9 +2,17 @@
 
 {% block container %}
 
+<input type="hidden" id="book_code" value="{{book_code}}">
 <div class="row-fluid">
     <div class="span3">
         <div id="book_tools" rel="{% trans %}Book{% endtrans %}" class="well littletitle lead">
+
+            <div id="alert_book_tools" class="alert alert-block alert-error fade in hide ">
+                <button data-dismiss="alert" class="close" type="button">×</button>
+                <h4 class="alert-heading">{% trans %} Error!{% endtrans %}</h4>
+                <p id="msg_error"></p>   
+            </div>
+
             <p> {{ book_name }}</p>
             <div class="btn-group">                 
                 <button id="btn_config_book" class="btn" title="configure this book"><i class="icon-wrench"></i></button>                    
@@ -16,13 +24,13 @@
                 </a>
                 <ul class="dropdown-menu">
                     {% for format in build_formats %}
-                        <li><a href="#">{{ format }}</a></li>                    
+                        <li><a class="build_option" id="btn_{{ format }}">{{ format }}</a></li>                    
                     {% endfor %}
                     </ul>
                 </div>
             </div>
 
-            <div id="document_tools" rel="{% trans %}Document{% endtrans %}" class="well littletitle">
+            <div id="document_tools" rel="{% trans %}Document{% endtrans %}" class="well littletitle">                
 
                 <select id="document_list_selection">
 
@@ -43,7 +51,7 @@
                         </a>
                         <ul class="dropdown-menu">
                              {% for format in download_formats %}
-                                <li><a href="#">{{ format }}</a></li>                    
+                                <li><a class="download_option" id="btn_{{ format }}">{{ format }}</a></li>                    
                              {% endfor %}
                             </ul>
                         </div>
@@ -51,7 +59,7 @@
 
                 </div>
 
-                <div id="genericTools" rel="{% trans %}Tools{% endtrans %}" class="well littletitle">
+                <div id="generic_tools" rel="{% trans %}Tools{% endtrans %}" class="well littletitle">
                     <div class="btn-toolbar">
                         <div class="btn-group">
                             <button id="btn_new_doc" class="btn" title="add new document to the book"><i class="icon-plus"></i></button>                       
@@ -61,8 +69,8 @@
                             <button id="btn_image_manager" class="btn" title="image manager"><i class="icon-picture"></i></button>                    
                         </div>
                         <div class="btn-group">
-                            <button id="btn_toggle_preview" class="btn"  data-toggle="button" title="toggle preview"><i class="icon-eye-open"></i></button>
-                            <button id="btn_full_screen" class="btn" title="enter full screen"><i class="icon-fullscreen"></i></button>                   
+                            <button id="btn_toggle_preview" class="btn"  data-toggle="button" title="toggle preview [Alt + p]"><i class="icon-eye-open"></i></button>
+                            <button id="btn_full_screen" class="btn" title="enter full screen [Alt + f]"><i class="icon-fullscreen"></i></button>                   
                         </div>
                     </div>
                 </div>
@@ -80,10 +88,12 @@
 
         <!-- template for document list render -->
         <script type="text/template" id="t_document_list"> 
-            <option></option>
-            <% _.each(documents, function(doc){ %>
-            <option id="<%= doc %>"> <%= doc %> </option>
-            <% }); %>
+            <select>
+                <option></option>
+                <% _.each(documents, function(doc){ %>
+                <option id="<%= doc.name %>"> <%= doc.name %> </option>
+                <% }); %>
+            </select>
         </script>
 
 
