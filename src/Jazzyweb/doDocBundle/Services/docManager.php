@@ -49,7 +49,9 @@ class docManager {
 
         $i = 0;
         foreach ($iterator as $document) {
+            $out['json'][$i]['id'] = $document->getFilename();
             $out['json'][$i]['name'] = $document->getFilename();
+            $out['json'][$i]['book'] = $bookCode;
             $out['json'][$i]['another_property'] = 'another property';
             $i++;
         }
@@ -78,7 +80,7 @@ class docManager {
         } else {
             //$document = $iterator->current();            
             $content = file_get_contents($docPath);
-            $out['json']['docname'] = $docName;
+            $out['json']['name'] = $docName;
             $out['json']['content'] = $content;
             $out['status_code'] = 200;
         }
@@ -112,7 +114,7 @@ class docManager {
                 $out['status_code'] = 500;
                 return $out;
             }
-            $out['json']['docname'] = $docPath;
+            $out['json']['name'] = $docPath;
             $out['status_code'] = 200;
         }
 
@@ -135,12 +137,12 @@ class docManager {
             $out['status_code'] = 403;
         } else {
 
-            if (!\file_put_contents($docPath, $content)) {
+            if (!\file_put_contents($docPath, $content)) {                
                 $out['json']['message'] = "Can't write the document " . $docName . " in book " . $bookCode;
                 $out['error'] = true;
                 $out['status_code'] = 500;
-            } else {
-                $out['json']['docname'] = $docPath;
+            } else {                
+                $out['json']['name'] = basename($docPath);
                 $out['status_code'] = 200;
             }
         }

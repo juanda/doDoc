@@ -2,7 +2,11 @@
 
 window.documentModel = Backbone.Model.extend({
     
-    });
+    url: function(){
+        return config.webBasePath + '/book/' + this.get('book') + '/docs/' + this.get('name');
+    }
+    
+});
 
 window.documentCollection = Backbone.Collection.extend({
     
@@ -40,10 +44,14 @@ window.documentTools = Backbone.View.extend({
         this.collection.bind('reset', this.render,this);
         
         this.updateDocumentList();
+        
+        $('#btn_save_doc').addClass('disabled');
+        $('#btn_del_doc').addClass('disabled');
+        $('#btn_download_doc').addClass('disabled');
     },
     
     events: {
-        "click #btn_edit_doc": "editDoc",
+        "change #document_list_selection": "editDoc",        
         "click #btn_save_doc": "saveDoc",
         "click #btn_del_doc": "deleteDoc",
         "click .download_option": "downloadDoc"
@@ -85,11 +93,74 @@ window.documentTools = Backbone.View.extend({
     
     editDoc: function(){
         console.log('documentTools.editDoc');
-        this.updateDocumentList();
+        console.log($('#document_list_selection option:selected').text());
+        
+        var document = this.collection.find(function(doc){
+            return doc.get('name') === $('#document_list_selection option:selected').text()
+        });
+        
+        if(typeof(document) == 'object' ){
+            $('#btn_save_doc').removeClass('disabled');
+            $('#btn_del_doc').removeClass('disabled');
+            $('#btn_download_doc').removeClass('disabled');
+            
+            var that = this;
+            document.fetch({
+                success: function(model, response){
+                    $('#document_editor').attr('rel', model.get('name'));
+                    app.editor.importFile(model.get('name'), model.get('content'));
+                    app.status.currentDoc = model;
+                },
+                error: function(model, response){
+                    that.showError(response);
+                    app.editor.importFile('', '');
+                    app.status.currentDoc = null;
+                }
+            });
+        }else{
+            $('#document_editor').attr('rel', '-- Select a document to work with --');
+            app.editor.importFile('', '');
+            app.status.currentDoc = null;
+            $('#btn_save_doc').addClass('disabled');
+            $('#btn_del_doc').addClass('disabled');
+            $('#btn_download_doc').addClass('disabled');
+            
+        }                    
+    },
+       
+    saveDoc: function(){
+        console.log('documentTools.saveDoc');  
+                
+        var content = app.editor.exportFile();
+        var that = this;
+        if(app.status.currentDoc)
+        {
+            $('#btn_save_doc').addClass('disabled');
+            $('#notifications').addClass('label notification');
+            $('#notifications').html('saving document');
+            $('#ajax-loader').show();
+            app.status.currentDoc.set('content', content);
+            app.status.currentDoc.save({},{
+                success: function(){
+                    $('#btn_save_doc').removeClass('disabled');
+                    $('#notifications').removeClass('label notification');
+                    $('#notifications').html('');
+                    $('#ajax-loader').hide();
+                },
+                error: function(model, response){
+                    that.showError(response);
+                    $('#btn_save_doc').removeClass('disabled');
+                    $('#notifications').removeClass('label notification');
+                    $('#notifications').hide();
+                }
+            });
+        }        
     },
     
-    saveDoc: function(){
-        console.log('documentTools.saveDoc');
+    showError: function(response){
+        jsonResponse = jQuery.parseJSON(response.responseText);
+        $('#msg_error_doctool').html(jsonResponse.message);
+        $('#alert_document_tools').toggleClass('hide');        
     },
     
     deleteDoc: function(){
@@ -182,7 +253,13 @@ window.appRouter = Backbone.Router.extend({
         this.documentToolsView = new window.documentTools({
             collection: this.documentCollection
         });
-        this.genericToolsView  = new window.genericTools;                
+        this.genericToolsView  = new window.genericTools;   
+        
+        this.status = {
+            currentDoc: null,
+            currentBook: $('#book_code').val()
+        }
+        
     }
    
 });
