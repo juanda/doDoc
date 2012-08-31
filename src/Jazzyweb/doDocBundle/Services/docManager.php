@@ -152,7 +152,7 @@ class docManager {
 
     public function removeDocument($bookCode, $docName) {
         $out = array();
-
+        sleep(1);
         list($bookPath, $docPath) = $this->getBookAndDocumentPath($bookCode, $docName);
 
         if (!file_exists($bookPath)) {

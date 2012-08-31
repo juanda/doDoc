@@ -130,15 +130,16 @@ window.documentTools = Backbone.View.extend({
        
     saveDoc: function(){
         console.log('documentTools.saveDoc');  
-                
-        var content = app.editor.exportFile();
-        var that = this;
+                        
         if(app.status.currentDoc)
         {
             $('#btn_save_doc').addClass('disabled');
             $('#notifications').addClass('label notification');
             $('#notifications').html('saving document');
             $('#ajax-loader').show();
+            
+            var content = app.editor.exportFile();
+            var that = this;
             app.status.currentDoc.set('content', content);
             app.status.currentDoc.save({},{
                 success: function(){
@@ -157,15 +158,43 @@ window.documentTools = Backbone.View.extend({
         }        
     },
     
+    deleteDoc: function(){
+        console.log('documentTools.deleteDoc');          
+        
+        var that = this;
+        
+        if(app.status.currentDoc)
+        {
+            $('#btn_del_doc').addClass('disabled');
+            $('#notifications').addClass('label notification');
+            $('#notifications').html('removing document');
+            $('#ajax-loader').show();
+            
+            app.status.currentDoc.destroy({
+                success: function(){
+                    $('#btn_del_doc').removeClass('disabled');
+                    $('#notifications').removeClass('label notification');
+                    $('#notifications').html('');
+                    $('#ajax-loader').hide();
+                    
+                    that.collection.fetch();
+                },
+                
+                error: function(){
+                    that.showError(response);
+                    $('#btn_del_doc').removeClass('disabled');
+                    $('#notifications').removeClass('label notification');
+                    $('#notifications').hide();
+                }
+            });
+        }
+    },
+    
     showError: function(response){
         jsonResponse = jQuery.parseJSON(response.responseText);
         $('#msg_error_doctool').html(jsonResponse.message);
         $('#alert_document_tools').toggleClass('hide');        
-    },
-    
-    deleteDoc: function(){
-        console.log('documentTools.deleteDoc');
-    },
+    },    
     
     downloadDoc: function(a){
         console.log('documentTools.downloadDoc.' + a.currentTarget.id);
