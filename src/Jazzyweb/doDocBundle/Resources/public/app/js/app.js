@@ -131,11 +131,11 @@ window.documentTools = Backbone.View.extend({
             
             document.fetch({
                 success: function(model, response){
-                    $('#document_editor_container').attr('rel', model.get('name'));
+                    //$('#document_editor_container').attr('rel', model.get('name'));
                     app.editor.importFile(model.get('name'), model.get('content'));
                     app.status.currentDoc = model;
                                     
-                    var message = 'Document ' + response.name + 'has been loaded';
+                    var message = 'Document ' + response.name + ' has been loaded';
                     window.showAlert('alert-success', message);
                     window.hideNotification();
                     window.enableDocumentTools();
@@ -389,6 +389,10 @@ window.enableDocumentTools = function(){
     $('#btn_download_doc').removeClass('disabled');
 }
 
+window.changeDocTitle = function(model){
+    $('#document_editor_container').attr('rel', model.get('name'));
+};
+
 window.appRouter = Backbone.Router.extend({
    
     initialize: function(){
@@ -432,10 +436,9 @@ window.appRouter = Backbone.Router.extend({
         });
         
         this.status = {
-            currentDoc: null,
+            currentDoc: new window.documentModel,
             currentBook: $('#book_code').val()
         }
-        
     }
    
 });

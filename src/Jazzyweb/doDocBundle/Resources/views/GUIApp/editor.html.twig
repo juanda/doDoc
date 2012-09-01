@@ -96,10 +96,13 @@
             </div>
 
             <div id="document_editor" class="span9">
-
+                <div id="document_editor_container" rel="-- Select a documet to edit --" class="well littletitle">                   
+                    <div style="height: 450px; width: 800px" id="epiceditor"></div>
+                    <span id="notifications" class="label"></span><image id="ajax-loader" src="{{ asset('bundles/jazzywebdodoc/app/images/ajax-loader.gif') }}" class="hide"/>
+                </div>
             </div> 
         </div>
-        
+
         <!-- template for editor -->
         <script type="text/template" id="t_editor">
             <div id="document_editor_container" rel="<%= name %>" class="well littletitle">                   
