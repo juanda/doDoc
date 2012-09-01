@@ -5,7 +5,8 @@ namespace Jazzyweb\doDocBundle\Services;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Filesystem;
 
-class docManager {
+class docManager
+{
 
     protected $doctrine;
     protected $docDir;
@@ -13,7 +14,8 @@ class docManager {
     protected $outputDirname;
     protected $fileSystem;
 
-    public function __construct($doctrine, $docDir, $contentsDirname, $outputDirname, $configFilename) {
+    public function __construct($doctrine, $docDir, $contentsDirname, $outputDirname, $configFilename)
+    {
 
         $this->doctrine = $doctrine;
         $this->docDir = $docDir;
@@ -24,22 +26,30 @@ class docManager {
         $this->finder = new Finder();
     }
 
-    public function getAllDocuments($bookCode, $user = null) {
+    protected function wait()
+    {
+        sleep(1);
+    }
 
+    public function getAllDocuments($bookCode, $user = null)
+    {
+        $this->wait();
         // check if the ``$user`` is asigned to the ``$book``
         // if not return null
 
         $out = array();
 
-        try {
+        try
+        {
             $iterator = $this->finder
-                            ->files()
-                            ->name('*')
-                            ->in($this->docDir . '/' . $bookCode . '/' . $this->contentsDirname)
-                            ->depth(0)
-                            ->sortByName()
-                            ->getIterator();
-        } catch (\InvalidArgumentException $e) {
+                    ->files()
+                    ->name('*')
+                    ->in($this->docDir . '/' . $bookCode . '/' . $this->contentsDirname)
+                    ->depth(0)
+                    ->sortByName()
+                    ->getIterator();
+        } catch (\InvalidArgumentException $e)
+        {
 
             $out['json']['message'] = "The book " . $bookCode . " does not exists";
             $out['error'] = true;
@@ -48,7 +58,8 @@ class docManager {
         }
 
         $i = 0;
-        foreach ($iterator as $document) {
+        foreach ($iterator as $document)
+        {
             $out['json'][$i]['id'] = $document->getFilename();
             $out['json'][$i]['name'] = $document->getFilename();
             $out['json'][$i]['book'] = $bookCode;
@@ -60,8 +71,9 @@ class docManager {
         return $out;
     }
 
-    public function getDocument($bookCode, $docName, $user = null) {
-
+    public function getDocument($bookCode, $docName, $user = null)
+    {
+        $this->wait();
         // check if the ``$user`` is asigned to the ``$book``
         // if not return null
 
@@ -88,8 +100,9 @@ class docManager {
         return $out;
     }
 
-    public function createDocument($bookCode, $docName, $content, $user = null) {
-
+    public function createDocument($bookCode, $docName, $content, $user = null)
+    {
+        $this->wait();
         $out = array();
 
         list($bookPath, $docPath) = $this->getBookAndDocumentPath($bookCode, $docName);
@@ -103,26 +116,30 @@ class docManager {
             $out['error'] = true;
             $out['status_code'] = 403;
         } else {
-            try {
+            try
+            {
                 $this->fileSystem->touch($docPath);
                 if ($content) {
                     \file_put_contents($docPath, $content);
                 }
-            } catch (\ErrorException $e) {
+            } catch (\ErrorException $e)
+            {
                 $out['json']['message'] = $e->getMessage();
                 $out['error'] = true;
                 $out['status_code'] = 500;
                 return $out;
             }
-            $out['json']['name'] = $docPath;
+            $out['json']['name'] = basename($docPath);
+            $out['json']['id'] = basename($docPath);
             $out['status_code'] = 200;
         }
 
         return $out;
     }
 
-    public function saveDocument($bookCode, $docName, $content) {
-
+    public function saveDocument($bookCode, $docName, $content)
+    {
+        $this->wait();
         $out = array();
 
         list($bookPath, $docPath) = $this->getBookAndDocumentPath($bookCode, $docName);
@@ -137,11 +154,11 @@ class docManager {
             $out['status_code'] = 403;
         } else {
 
-            if (!\file_put_contents($docPath, $content)) {                
+            if (!\file_put_contents($docPath, $content)) {
                 $out['json']['message'] = "Can't write the document " . $docName . " in book " . $bookCode;
                 $out['error'] = true;
                 $out['status_code'] = 500;
-            } else {                
+            } else {
                 $out['json']['name'] = basename($docPath);
                 $out['status_code'] = 200;
             }
@@ -150,9 +167,11 @@ class docManager {
         return $out;
     }
 
-    public function removeDocument($bookCode, $docName) {
+    public function removeDocument($bookCode, $docName)
+    {
+        $this->wait();
         $out = array();
-        sleep(1);
+        
         list($bookPath, $docPath) = $this->getBookAndDocumentPath($bookCode, $docName);
 
         if (!file_exists($bookPath)) {
@@ -164,22 +183,22 @@ class docManager {
             $out['error'] = true;
             $out['status_code'] = 403;
         } else {
-            try {
-                $this->fileSystem->remove($docPath);
-            } catch (\ErrorException $e) {
-                $out['json']['message'] = $e->getMessage();
+
+            if (!unlink($docPath)) {
+                $out['json']['message'] = "The document " . basename($docName) . " can't be deleted";
                 $out['error'] = true;
                 $out['status_code'] = 500;
-                return $out;
+            } else {
+                $out['json']['message'] = "The document " . basename($docPath) . " has been removed";
+                $out['status_code'] = 200;
             }
-            $out['json']['message'] = "The document ". $docPath . "has been removed";
-            $out['status_code'] = 200;
         }
 
         return $out;
     }
 
-    protected function getBookAndDocumentPath($bookCode, $docName) {
+    protected function getBookAndDocumentPath($bookCode, $docName)
+    {
         $bookPath = $this->docDir
                 . '/' .
                 $bookCode

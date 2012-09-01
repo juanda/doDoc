@@ -3,15 +3,14 @@
 {% block container %}
 
 <input type="hidden" id="book_code" value="{{book_code}}">
+
 <div class="row-fluid">
+    <div id="alerts" class="span12"></div>
+</div>
+<div class="row-fluid">
+
     <div class="span3">
         <div id="book_tools" rel="{% trans %}Book{% endtrans %}" class="well littletitle lead">
-
-            <div id="alert_book_tools" class="alert alert-block alert-error fade in hide ">
-                <button data-dismiss="alert" class="close" type="button">×</button>
-                <h4 class="alert-heading">{% trans %} Error!{% endtrans %}</h4>
-                <p id="msg_error"></p>   
-            </div>
 
             <p> {{ book_name }}</p>
             <div class="btn-group">                 
@@ -31,12 +30,7 @@
             </div>
 
             <div id="document_tools" rel="{% trans %}Document{% endtrans %}" class="well littletitle">                
-               
-                <div id="alert_document_tools" class="alert alert-block alert-error fade in hide ">
-                    <button data-dismiss="alert" class="close" type="button">×</button>
-                    <h4 class="alert-heading">{% trans %} Error!{% endtrans %}</h4>
-                    <p id="msg_error_doctool"></p>   
-                </div>
+
                 <select id="document_list_selection">
 
                 </select>
@@ -65,6 +59,7 @@
                 </div>
 
                 <div id="generic_tools" rel="{% trans %}Tools{% endtrans %}" class="well littletitle">
+
                     <div class="btn-toolbar">
                         <div class="btn-group">
                             <button id="btn_new_doc" class="btn" title="add new document to the book"><i class="icon-plus"></i></button>                       
@@ -78,17 +73,47 @@
                             <button id="btn_full_screen" class="btn" title="enter full screen [Alt + f]"><i class="icon-fullscreen"></i></button>                   
                         </div>
                     </div>
+
+                    <!-- modal form to get document name -->
+
+                    <div id="form_new_doc" class="modal hide fade">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h3>Insert the document name</h3>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="input-append">
+                                    <input id="txt_new_doc" class="span8" size="32" type="text">
+                                    <button id="btn_name_new_doc" class="btn" type="button">ok</button>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
                 </div>
 
             </div>
 
-            <div class="span9">
-                <div id="document_editor" rel="kuku - {% trans %}edit view{% endtrans %}" class="well littletitle">                   
-                    <div style="height: 450px; width: 800px" id="epiceditor"></div>
-                    <span id="notifications" class=""></span><image id="ajax-loader" src="{{ asset('bundles/jazzywebdodoc/app/images/ajax-loader.gif') }}" class="hide"/>
-                </div>
+            <div id="document_editor" class="span9">
+
             </div> 
         </div>
+        
+        <!-- template for editor -->
+        <script type="text/template" id="t_editor">
+            <div id="document_editor_container" rel="<%= name %>" class="well littletitle">                   
+                <div style="height: 450px; width: 800px" id="epiceditor"></div>
+                <span id="notifications" class="label"></span><image id="ajax-loader" src="{{ asset('bundles/jazzywebdodoc/app/images/ajax-loader.gif') }}" class="hide"/>
+            </div>
+        </script>
+        <!-- template for alerts render -->
+        <script type="text/template" id="t_alerts">
+            <div class="alert fade in  <%= type %>">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <%= message %>
+            </div>
+        </script>
 
         <!-- template for document list render -->
         <script type="text/template" id="t_document_list"> 
