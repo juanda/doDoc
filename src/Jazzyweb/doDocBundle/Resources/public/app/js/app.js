@@ -83,6 +83,7 @@ window.documentTools = Backbone.View.extend({
         var addedDoc = this.collection.last();
         
         $('#'+addedDoc.get('name')).attr('selected', 'selected');
+        $('#document_editor_container').attr('rel', addedDoc.get('name'));
         
         app.status.currentDoc = addedDoc;
 
@@ -131,7 +132,7 @@ window.documentTools = Backbone.View.extend({
             
             document.fetch({
                 success: function(model, response){
-                    //$('#document_editor_container').attr('rel', model.get('name'));
+                    $('#document_editor_container').attr('rel', model.get('name'));
                     app.editor.importFile(model.get('name'), model.get('content'));
                     app.status.currentDoc = model;
                                     
@@ -154,7 +155,7 @@ window.documentTools = Backbone.View.extend({
                 }
             });
         }else{
-            $('#document_editor').attr('rel', '-- Select a document to work with --');
+            $('#document_editor_container').attr('rel', '-- Select a document to work with --');
             app.editor.importFile('', '');
             app.status.currentDoc = null;
             window.ebleDocumentTools();
@@ -264,17 +265,18 @@ window.genericTools = Backbone.View.extend({
         
         $('#form_new_doc').modal('hide');
         window.showNotification('label-info','Creating document ...');
+        window.disableDocumentTools();
         document.save(
         {},
         {
             success: function(model,response){
                 var message = "The document " + response.name + " has been created";
-                window.showAlert('alert-success', message);
+                
                 that.collection.add(model);
                 app.editor.importFile('','');
-                $('#btn_save_doc').removeClass('disabled');
-                $('#btn_del_doc').removeClass('disabled');
-                $('#btn_download_doc').removeClass('disabled');
+                
+                window.showAlert('alert-success', message);
+                window.enableDocumentTools();
                 window.hideNotification();
             },
             error: function(model,response){
@@ -282,8 +284,8 @@ window.genericTools = Backbone.View.extend({
                 var message = "<strong>Error:</strong> " + jsonResponse.message;
                 
                 window.showAlert('alert-error', message);
-                window.hideNotification();
-                
+                window.enableDocumentTools();
+                window.hideNotification();                
             }
         }); 
     },
