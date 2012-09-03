@@ -16,7 +16,7 @@ class UploadHandler
 
     function __construct($options=null) {
         $this->options = array(
-            'script_url' => $this->getFullUrl().'/',
+            'script_url' => $this->getFullUrl().'/index.php',
             'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']).'/files/',
             'upload_url' => $this->getFullUrl().'/files/',
             'param_name' => 'files',

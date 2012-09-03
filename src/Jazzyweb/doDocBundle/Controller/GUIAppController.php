@@ -26,16 +26,6 @@ class GUIAppController extends Controller {
 
         return $this->render('JazzywebdoDocBundle:GUIApp:editor.html.twig', $params);
     }
-    
-    public function uploadToolAction(){
-        
-        $uploadManager = $this->get('jazzyweb.dodocuploadhandler');
-      
-        
-        return $this->render('JazzywebdoDocBundle:GUIApp:uploadtool.html.twig', array());
-    
-    }
-
 }
 
 ?>

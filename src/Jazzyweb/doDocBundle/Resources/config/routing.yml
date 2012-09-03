@@ -40,7 +40,32 @@ JazzywebdoDocBundle_guiapp_editor:
      _method: GET
 
 JazzywebdoDocBundle_guiapp_upload_tool:
-  pattern: /uploadtool/{book}
-  defaults: { _controller: JazzywebdoDocBundle:GUIApp:uploadTool }
+  pattern: /uploadtool/ui/{book}
+  defaults: { _controller: JazzywebdoDocBundle:Upload:uploadTool }
   requirements:
      _method: GET
+     
+JazzywebdoDocBundle_guiapp_api_upload_getallfiles:
+  pattern: /uploadtool/book/{book}
+  defaults: { _controller: JazzywebdoDocBundle:Upload:getAll }
+  requirements:
+     _method: GET
+     
+JazzywebdoDocBundle_guiapp_api_upload_getfile:
+  pattern: /uploadtool/book/{book}/{file}
+  defaults: { _controller: JazzywebdoDocBundle:Upload:get }
+  requirements:
+     _method: GET
+
+JazzywebdoDocBundle_guiapp_api_upload_delete:
+  pattern: /uploadtool/book/{book}/{file}
+  defaults: { _controller: JazzywebdoDocBundle:Upload:delete }
+  requirements:
+     _method: DELETE
+
+
+JazzywebdoDocBundle_guiapp_api_upload_post:
+  pattern: /uploadtool/book/{book}
+  defaults: { _controller: JazzywebdoDocBundle:Upload:post }
+  requirements:
+     _method: POST

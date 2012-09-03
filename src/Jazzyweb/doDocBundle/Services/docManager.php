@@ -197,7 +197,7 @@ class docManager
         return $out;
     }
 
-    protected function getBookAndDocumentPath($bookCode, $docName)
+    public function getBookAndDocumentPath($bookCode, $docName)
     {
         $bookPath = $this->docDir
                 . '/' .
@@ -209,6 +209,16 @@ class docManager
 
         return array($bookPath, $docPath);
     }
-
+    
+    public function getDocDir()
+    {
+        return $this->docDir;
+    }
+    
+    public function getContentsDirname(){
+        
+        return $this->contentsDirname;
+    }
+    
 }
 
