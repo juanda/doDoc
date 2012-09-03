@@ -54,8 +54,10 @@ window.documentTools = Backbone.View.extend({
     events: {
         "change #document_list_selection": "editDoc",        
         "click #btn_save_doc": "saveDoc",
-        "click #btn_del_doc": "deleteDoc",
-        "click .download_option": "downloadDoc"
+        "click #btn_del_doc": "askDeleteDoc",
+        "click .download_option": "downloadDoc",
+        "click #btn_delete_ok"  : "deleteDoc",
+        "click #btn_delete_cancel"  : "cancelDeleteDoc"
     },
     
     template: _.template($('#t_document_list').html()),
@@ -193,9 +195,25 @@ window.documentTools = Backbone.View.extend({
         }        
     },
     
+    askDeleteDoc: function(){
+        $('#modal_ask_delete_doc').modal('show'); 
+        if(typeof(app.status.currentDoc) == 'object')
+        {
+            var message = 'You are about to delete the document: ' + app.status.currentDoc.get('name');
+            $('#txt_ask_delete_doc').html(message);
+            
+        }
+             
+    },
+    
+    cancelDeleteDoc: function(){
+        $('#modal_ask_delete_doc').modal('hide');
+    },
+    
     deleteDoc: function(){
         console.log('documentTools.deleteDoc');          
         
+        $('#modal_ask_delete_doc').modal('hide');   
         var that = this;
         
         if(app.status.currentDoc)
@@ -251,7 +269,7 @@ window.genericTools = Backbone.View.extend({
         "click #btn_image_manager":  "imageManagerTool",
         "click #btn_toggle_preview": "togglePreview",
         "click #btn_full_screen":    "fullScreen",        
-        "keydown #txt_new_doc": "enterDoc"
+        "keydown #txt_new_doc": "enterDoc"       
     },
     
     newDoc: function(){
@@ -302,7 +320,10 @@ window.genericTools = Backbone.View.extend({
     
     uploadDoc: function(){
         console.log('genericTools.uploadDoc');
-    },
+        
+        $('#upload_document_tool').modal('show');
+        $('#upload_document_tool-body').load('/doDoc/web/app_dev.php');
+    },        
     
     imageManagerTool: function(){
         console.log('genericTools.imageManagerTool');

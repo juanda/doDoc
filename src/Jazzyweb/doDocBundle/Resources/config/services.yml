@@ -5,6 +5,8 @@ parameters:
     jazzyweb.dodocmanager.outputdirname: Output
     jazzyweb.dodocmanager.configfilename: config.yml
     
+    jazzyweb.dodocuploadhandler.class: Jazzyweb\doDocBundle\Services\docUploadHandler
+    
 
 services:
     jazzyweb.dodocmanager:
@@ -15,3 +17,8 @@ services:
          - %jazzyweb.dodocmanager.contentsdirname%
          - %jazzyweb.dodocmanager.outputdirname%
          - %jazzyweb.dodocmanager.configfilename%
+   
+    jazzyweb.dodocuploadhandler:
+       class: %jazzyweb.dodocuploadhandler.class%
+       arguments:
+         - %jazzyweb.dodocmanager.docdir%

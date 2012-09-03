@@ -38,3 +38,9 @@ JazzywebdoDocBundle_guiapp_editor:
   defaults: { _controller: JazzywebdoDocBundle:GUIApp:editor }
   requirements:
      _method: GET
+
+JazzywebdoDocBundle_guiapp_upload_tool:
+  pattern: /uploadtool/{book}
+  defaults: { _controller: JazzywebdoDocBundle:GUIApp:uploadTool }
+  requirements:
+     _method: GET

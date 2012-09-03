@@ -57,6 +57,20 @@
                         </div>
                     </div>
 
+                    <!-- modal form to ask confirmation to remove document -->
+
+                    <div id="modal_ask_delete_doc" class="modal hide fade">
+                        <div class="modal-header">
+                            <h3>Atention delete operation in progress!!</h3>
+                        </div>                      
+                        <div class="modal-body">
+                            <p id="txt_ask_delete_doc"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <a id="btn_delete_ok" class="btn btn-danger">delete</a>
+                            <a id="btn_delete_cancel" class="btn btn-inverse">cancel</a>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="generic_tools" rel="{% trans %}Tools{% endtrans %}" class="well littletitle">
@@ -83,15 +97,32 @@
                             <h3>Insert the document name</h3>
                         </div>
                         <div class="modal-body">
-                            
-                                <div class="input-append">
-                                    <input id="txt_new_doc" class="span8" size="32" type="text">
-                                    <button id="btn_name_new_doc" class="btn" type="button">ok</button>
-                                </div>
-                            
+
+                            <div class="input-append">
+                                <input id="txt_new_doc" class="span8" size="32" type="text">
+                                <button id="btn_name_new_doc" class="btn" type="button">ok</button>
+                            </div>
+
                         </div>
 
                     </div>
+
+
+                    <!-- modal form to document upload tool -->
+
+                    <div id="upload_document_tool" class="modal hide fade">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h3>Upload and manage documents and images</h3>
+                        </div>
+                            
+                        <iframe src="{{ url('JazzywebdoDocBundle_guiapp_upload_tool', { 'book':  book_code  }) }}" name="upload_tool" scrolling="auto" frameborder="1">
+                        <p>Your browser doesn't support iframes, Change it!</p>
+                        </iframe>
+
+                    </div>
+
+
                 </div>
 
             </div>
@@ -130,5 +161,3 @@
         </script>
 
     {% endblock %}
-
-
