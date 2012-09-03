@@ -83,7 +83,7 @@ window.documentTools = Backbone.View.extend({
         var addedDoc = this.collection.last();
         
         $('#'+addedDoc.get('name')).attr('selected', 'selected');
-        $('#document_editor_container').attr('rel', addedDoc.get('name'));
+        window.changeDocTitle(addedDoc.get('name'));
         
         app.status.currentDoc = addedDoc;
 
@@ -99,10 +99,10 @@ window.documentTools = Backbone.View.extend({
                 console.log('documentTools.initialize.fetch.success');
                 
                 var message = 'Opening book: ' 
-                    + app.status.currentBook 
-                    + ', '
-                    + collection.size() 
-                    + ' documents have been loaded';
+                + app.status.currentBook 
+                + ', '
+                + collection.size() 
+                + ' documents have been loaded';
                 window.showAlert('alert-success', message);
                 window.hideNotification();
             },
@@ -132,7 +132,7 @@ window.documentTools = Backbone.View.extend({
             
             document.fetch({
                 success: function(model, response){
-                    $('#document_editor_container').attr('rel', model.get('name'));
+                    window.changeDocTitle(model.get('name'));
                     app.editor.importFile(model.get('name'), model.get('content'));
                     app.status.currentDoc = model;
                                     
@@ -155,7 +155,7 @@ window.documentTools = Backbone.View.extend({
                 }
             });
         }else{
-            $('#document_editor_container').attr('rel', '-- Select a document to work with --');
+            window.changeDocTitle('-- Select a document to work with --');
             app.editor.importFile('', '');
             app.status.currentDoc = null;
             window.ebleDocumentTools();
@@ -211,6 +211,7 @@ window.documentTools = Backbone.View.extend({
                     window.showAlert('alert-success', message);
                     window.hideNotification();
                     window.enableDocumentTools();
+                    window.changeDocTitle('-- Select a document to edit --');
                     
                 },
                 
@@ -229,27 +230,36 @@ window.documentTools = Backbone.View.extend({
     downloadDoc: function(a){
         console.log('documentTools.downloadDoc.' + a.currentTarget.id);
     }
-
+        
 });
 
 window.genericTools = Backbone.View.extend({   
     
     el: $('#generic_tools'),
-           
+          
+    initialize: function(){
+        $('#form_new_doc').on('shown', function () {
+            console.log('genericTools showing modal');
+            $('#txt_new_doc').focus()
+        })
+    },
+    
     events: {
         "click #btn_new_doc":        "newDoc",
         "click #btn_name_new_doc":   "createNewDoc",
         "click #btn_upload_doc":     "uploadDoc",
         "click #btn_image_manager":  "imageManagerTool",
         "click #btn_toggle_preview": "togglePreview",
-        "click #btn_full_screen":    "fullScreen"        
+        "click #btn_full_screen":    "fullScreen",        
+        "keydown #txt_new_doc": "enterDoc"
     },
     
     newDoc: function(){
         console.log('genericTools.newDoc');
         
-        $('#form_new_doc').modal('show');
-       
+        $('#form_new_doc').modal('show');        
+        $('#txt_new_doc').val('');
+        $('#txt_new_doc', this).focus();                      
     },
     
     createNewDoc: function(){
@@ -319,7 +329,17 @@ window.genericTools = Backbone.View.extend({
     fullScreen: function(){
         console.log('genericTools.fullScreen');
         app.editor._goFullscreen();
-    }        
+    },
+
+    enterDoc: function(e){
+        console.log('documentTools.enterDoc');
+        
+        if(e.keyCode == 13)
+        {
+            $('#btn_name_new_doc').click();
+        }
+    }
+
 });
 
 window.alertView = Backbone.View.extend({
@@ -362,7 +382,9 @@ window.showAlert = function(t, m){
     app.alert.trigger('change');
     
     // Close the alert after 5 seconds
-    window.setTimeout(function() { $(".alert").alert('close'); }, 5000);
+    window.setTimeout(function() {
+        $(".alert").alert('close');
+    }, 5000);
 }
 
 window.showNotification = function(t, m){
@@ -391,8 +413,8 @@ window.enableDocumentTools = function(){
     $('#btn_download_doc').removeClass('disabled');
 }
 
-window.changeDocTitle = function(model){
-    $('#document_editor_container').attr('rel', model.get('name'));
+window.changeDocTitle = function(title){
+    $('#document_editor_container').attr('rel', title);
 };
 
 window.appRouter = Backbone.Router.extend({
