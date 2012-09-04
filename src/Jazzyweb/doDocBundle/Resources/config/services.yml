@@ -1,12 +1,13 @@
 parameters:
     jazzyweb.dodocmanager.class: Jazzyweb\doDocBundle\Services\docManager
-    jazzyweb.dodocmanager.docdir: /Users/juanda/Sites/doDoc/web/docs
+    jazzyweb.dodocmanager.docdir: /home/juanda/easybook/doc
     jazzyweb.dodocmanager.contentsdirname: Contents
     jazzyweb.dodocmanager.outputdirname: Output
     jazzyweb.dodocmanager.configfilename: config.yml
     
     jazzyweb.dodocuploadhandler.class: Jazzyweb\doDocBundle\Services\docUploadHandler
-    jazzyweb.dodocuploadhandler.url_api: /uploadtool/book/
+    jazzyweb.dodocuploadhandler.url_api: /uploadtool/book
+    jazzyweb.dodocuploadhandler.thumbnail_reldir: thumbnail
     
 
 services:
@@ -20,7 +21,10 @@ services:
          - %jazzyweb.dodocmanager.configfilename%
    
     jazzyweb.dodocuploadhandler:
+       scope: request
        class: %jazzyweb.dodocuploadhandler.class%
        arguments:
-         - "@jazzyweb.dodocmanager"
+         - "@request"
+         - "@jazzyweb.dodocmanager"      
          - %jazzyweb.dodocuploadhandler.url_api%
+         - %jazzyweb.dodocuploadhandler.thumbnail_reldir%

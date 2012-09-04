@@ -13,17 +13,16 @@
 
 namespace Jazzyweb\doDocBundle\Services;
 
-class docUploadHandler
-{
+class docUploadHandler {
 
     protected $options;
 
-    function __construct($doDocManager, $url_api)
-    {
+    function __construct($request, $doDocManager, $urlApi, $thumbnailReldir) {
         $this->doDocManager = $doDocManager;
+        $this->request = $request;
 
         $this->options = array(
-            'script_url' => $url_api,
+            'script_url' => $urlApi,
             'upload_dir' => $doDocManager->getDocDir(),
             'upload_url' => '/not_needed/',
             'param_name' => 'files',
@@ -47,43 +46,51 @@ class docUploadHandler
             // Set to true to rotate images based on EXIF meta data, if available:
             'orient_image' => false,
             'image_versions' => array(
-            // Uncomment the following version to restrict the size of
-            // uploaded images. You can also add additional versions with
-            // their own upload directories:
-            /*
-              'large' => array(
-              'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']).'/files/',
-              'upload_url' => $this->getFullUrl().'/files/',
-              'max_width' => 1920,
-              'max_height' => 1200,
-              'jpeg_quality' => 95
-              ),
-
-              'thumbnail' => array(
-              'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']) . '/thumbnails/',
-              'upload_url' => $this->getFullUrl() . '/thumbnails/',
-              'max_width' => 80,
-              'max_height' => 80
-              )
-             */
+                // Uncomment the following version to restrict the size of
+                // uploaded images. You can also add additional versions with
+                // their own upload directories:
+                /*
+                  'large' => array(
+                  'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']).'/files/',
+                  'upload_url' => $this->getFullUrl().'/files/',
+                  'max_width' => 1920,
+                  'max_height' => 1200,
+                  'jpeg_quality' => 95
+                  ),
+                 */
+                'thumbnail' => array(
+                    'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']) . '/' . $thumbnailReldir,
+                    'upload_url' => $request->getBasePath() . '/' . $thumbnailReldir,
+                    'max_width' => 80,
+                    'max_height' => 80
+                )
             )
         );
+        
+//        echo '<pre>';
+//        print_r($this->options);
+//        echo '</pre>';
+//        exit;
 //        if ($options) {
 //            $this->options = array_replace_recursive($this->options, $options);
 //        }
     }
 
-    public function setBook($bookcode)
-    {
+    public function setBook($bookcode) {
         $this->options['script_url'] .= '/' . $bookcode;
         $this->options['upload_dir'] .= '/'
                 . $bookcode
                 . '/'
-                . $this->doDocManager->getContentsDirname();
+                . $this->doDocManager->getContentsDirname(). '/';
+               
+    }
+    
+    public function getOptions()
+    {
+        return $this->options;
     }
 
-    protected function getFullUrl()
-    {
+    protected function getFullUrl() {
         $https = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
         return
                 ($https ? 'https://' : 'http://') .
@@ -94,26 +101,25 @@ class docUploadHandler
                 substr($_SERVER['SCRIPT_NAME'], 0, strrpos($_SERVER['SCRIPT_NAME'], '/'));
     }
 
-    protected function set_file_delete_url($file)
-    {
-        $file->delete_url = $this->options['script_url']
-                . '?file=' . rawurlencode($file->name);
+    protected function set_file_delete_url($file) {
+//        $file->delete_url = $this->options['script_url']
+//                . '?file=' . rawurlencode($file->name);
+        $file->delete_url = $this->request->getBaseUrl() . $this->options['script_url'] . '/' . $file->name;
+                
         $file->delete_type = $this->options['delete_type'];
         if ($file->delete_type !== 'DELETE') {
             $file->delete_url .= '&_method=DELETE';
         }
     }
 
-    public function get_file_object($file_name)
-    {
+    public function get_file_object($file_name) {
         $file_path = $this->options['upload_dir'] . $file_name;
         if (is_file($file_path) && $file_name[0] !== '.') {
-            $file = new stdClass();
+            $file = new \stdClass();
             $file->name = $file_name;
             $file->size = filesize($file_path);
             $file->url = $this->options['upload_url'] . rawurlencode($file->name);
-            foreach ($this->options['image_versions'] as $version => $options)
-            {
+            foreach ($this->options['image_versions'] as $version => $options) {
                 if (is_file($options['upload_dir'] . $file_name)) {
                     $file->{$version . '_url'} = $options['upload_url']
                             . rawurlencode($file->name);
@@ -125,15 +131,13 @@ class docUploadHandler
         return null;
     }
 
-    protected function get_file_objects()
-    {
+    public function get_file_objects() {
         return array_values(array_filter(array_map(
                                         array($this, 'get_file_object'), scandir($this->options['upload_dir'])
                                 )));
     }
 
-    protected function create_scaled_image($file_name, $options)
-    {
+    protected function create_scaled_image($file_name, $options) {
         $file_path = $this->options['upload_dir'] . $file_name;
         $new_file_path = $options['upload_dir'] . $file_name;
         list($img_width, $img_height) = @getimagesize($file_path);
@@ -152,8 +156,7 @@ class docUploadHandler
         $new_width = $img_width * $scale;
         $new_height = $img_height * $scale;
         $new_img = @imagecreatetruecolor($new_width, $new_height);
-        switch (strtolower(substr(strrchr($file_name, '.'), 1)))
-        {
+        switch (strtolower(substr(strrchr($file_name, '.'), 1))) {
             case 'jpg':
             case 'jpeg':
                 $src_img = @imagecreatefromjpeg($file_path);
@@ -188,8 +191,7 @@ class docUploadHandler
         return $success;
     }
 
-    protected function validate($uploaded_file, $file, $error, $index)
-    {
+    protected function validate($uploaded_file, $file, $error, $index) {
         if ($error) {
             $file->error = $error;
             return false;
@@ -241,22 +243,19 @@ class docUploadHandler
         return true;
     }
 
-    protected function upcount_name_callback($matches)
-    {
+    protected function upcount_name_callback($matches) {
         $index = isset($matches[1]) ? intval($matches[1]) + 1 : 1;
         $ext = isset($matches[2]) ? $matches[2] : '';
         return ' (' . $index . ')' . $ext;
     }
 
-    protected function upcount_name($name)
-    {
+    protected function upcount_name($name) {
         return preg_replace_callback(
                         '/(?:(?: \(([\d]+)\))?(\.[^.]+))?$/', array($this, 'upcount_name_callback'), $name, 1
         );
     }
 
-    protected function trim_file_name($name, $type, $index)
-    {
+    protected function trim_file_name($name, $type, $index) {
         // Remove path information and dots around the filename, to prevent uploading
         // into different directories or replacing hidden system files.
         // Also remove control characters and spaces (\x00..\x20) around the filename:
@@ -267,21 +266,18 @@ class docUploadHandler
             $file_name .= '.' . $matches[1];
         }
         if ($this->options['discard_aborted_uploads']) {
-            while (is_file($this->options['upload_dir'] . $file_name))
-            {
+            while (is_file($this->options['upload_dir'] . $file_name)) {
                 $file_name = $this->upcount_name($file_name);
             }
         }
         return $file_name;
     }
 
-    protected function handle_form_data($file, $index)
-    {
+    protected function handle_form_data($file, $index) {
         // Handle form data, e.g. $_REQUEST['description'][$index]
     }
 
-    protected function orient_image($file_path)
-    {
+    protected function orient_image($file_path) {
         $exif = @exif_read_data($file_path);
         if ($exif === false) {
             return false;
@@ -291,8 +287,7 @@ class docUploadHandler
             return false;
         }
         $image = @imagecreatefromjpeg($file_path);
-        switch ($orientation)
-        {
+        switch ($orientation) {
             case 3:
                 $image = @imagerotate($image, 180, 0);
                 break;
@@ -311,9 +306,8 @@ class docUploadHandler
         return $success;
     }
 
-    protected function handle_file_upload($uploaded_file, $name, $size, $type, $error, $index = null)
-    {
-        $file = new stdClass();
+    protected function handle_file_upload($uploaded_file, $name, $size, $type, $error, $index = null) {
+        $file = new \stdClass();
         $file->name = $this->trim_file_name($name, $type, $index);
         $file->size = intval($size);
         $file->type = $type;
@@ -344,8 +338,7 @@ class docUploadHandler
                     $this->orient_image($file_path);
                 }
                 $file->url = $this->options['upload_url'] . rawurlencode($file->name);
-                foreach ($this->options['image_versions'] as $version => $options)
-                {
+                foreach ($this->options['image_versions'] as $version => $options) {
                     if ($this->create_scaled_image($file->name, $options)) {
                         if ($this->options['upload_dir'] !== $options['upload_dir']) {
                             $file->{$version . '_url'} = $options['upload_url']
@@ -366,8 +359,7 @@ class docUploadHandler
         return $file;
     }
 
-    public function get()
-    {
+    public function get() {
         $file_name = isset($_REQUEST['file']) ?
                 basename(stripslashes($_REQUEST['file'])) : null;
         if ($file_name) {
@@ -379,19 +371,17 @@ class docUploadHandler
         echo json_encode($info);
     }
 
-    public function post()
-    {
-        if (isset($_REQUEST['_method']) && $_REQUEST['_method'] === 'DELETE') {
-            return $this->delete();
-        }
+    public function post() {
+//        if (isset($_REQUEST['_method']) && $_REQUEST['_method'] === 'DELETE') {
+//            return $this->delete();
+//        }
         $upload = isset($_FILES[$this->options['param_name']]) ?
                 $_FILES[$this->options['param_name']] : null;
         $info = array();
         if ($upload && is_array($upload['tmp_name'])) {
             // param_name is an array identifier like "files[]",
             // $_FILES is a multi-dimensional array:
-            foreach ($upload['tmp_name'] as $index => $value)
-            {
+            foreach ($upload['tmp_name'] as $index => $value) {
                 $info[] = $this->handle_file_upload(
                         $upload['tmp_name'][$index], isset($_SERVER['HTTP_X_FILE_NAME']) ?
                                 $_SERVER['HTTP_X_FILE_NAME'] : $upload['name'][$index], isset($_SERVER['HTTP_X_FILE_SIZE']) ?
@@ -429,23 +419,22 @@ class docUploadHandler
         echo $json;
     }
 
-    public function delete()
-    {
-        $file_name = isset($_REQUEST['file']) ?
-                basename(stripslashes($_REQUEST['file'])) : null;
+    public function delete($file_name) {
+//        $file_name = isset($_REQUEST['file']) ?
+//                basename(stripslashes($_REQUEST['file'])) : null;
         $file_path = $this->options['upload_dir'] . $file_name;
         $success = is_file($file_path) && $file_name[0] !== '.' && unlink($file_path);
         if ($success) {
-            foreach ($this->options['image_versions'] as $version => $options)
-            {
+            foreach ($this->options['image_versions'] as $version => $options) {
                 $file = $options['upload_dir'] . $file_name;
                 if (is_file($file)) {
                     unlink($file);
                 }
             }
         }
-        header('Content-type: application/json');
-        echo json_encode($success);
+//        header('Content-type: application/json');
+//        echo json_encode($success);
+        return $success;
     }
 
 }

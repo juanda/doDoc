@@ -12,20 +12,21 @@ class GUIAppController extends Controller {
 
         $bookCode = $request->get('book');
         $bookName = $bookCode;
-        
+
         $build_formats = array('web', 'print', 'ebook');
-        
+
         $download_formats = array('HTML', 'PDF');
-        
+
         $params = array(
             'book_code' => $bookCode,
             'book_name' => $bookName,
             'build_formats' => $build_formats,
             'download_formats' => $download_formats,
-            );
+        );
 
         return $this->render('JazzywebdoDocBundle:GUIApp:editor.html.twig', $params);
     }
+
 }
 
 ?>
