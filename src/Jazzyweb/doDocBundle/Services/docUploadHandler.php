@@ -59,8 +59,8 @@ class docUploadHandler {
                   ),
                  */
                 'thumbnail' => array(
-                    'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']) . '/' . $thumbnailReldir,
-                    'upload_url' => $request->getBasePath() . '/' . $thumbnailReldir,
+                    'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']) . '/' . $thumbnailReldir .'/',
+                    'upload_url' => $request->getBasePath() . '/' . $thumbnailReldir. '/',
                     'max_width' => 80,
                     'max_height' => 80
                 )
@@ -402,21 +402,8 @@ class docUploadHandler {
                                     $upload['type'] : null), isset($upload['error']) ? $upload['error'] : null
             );
         }
-        header('Vary: Accept');
-        $json = json_encode($info);
-        $redirect = isset($_REQUEST['redirect']) ?
-                stripslashes($_REQUEST['redirect']) : null;
-        if ($redirect) {
-            header('Location: ' . sprintf($redirect, rawurlencode($json)));
-            return;
-        }
-        if (isset($_SERVER['HTTP_ACCEPT']) &&
-                (strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)) {
-            header('Content-type: application/json');
-        } else {
-            header('Content-type: text/plain');
-        }
-        echo $json;
+        
+        return $info;       
     }
 
     public function delete($file_name) {

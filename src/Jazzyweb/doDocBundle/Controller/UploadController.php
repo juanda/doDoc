@@ -7,7 +7,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UploadController extends Controller {
 
-    public function preAction() {
+    public function afterAction() {
+
         header('Pragma: no-cache');
         header('Cache-Control: no-store, no-cache, must-revalidate');
         header('Content-Disposition: inline; filename="files.json"');
@@ -17,72 +18,82 @@ class UploadController extends Controller {
         header('Access-Control-Allow-Headers: X-File-Name, X-File-Type, X-File-Size');
     }
 
+    public function beforeAction() {
+        $this->request = $this->getRequest();
+
+        $bookcode = $this->request->get('book');
+
+        $this->uploadHandler = $this->get('jazzyweb.dodocuploadhandler');
+
+        $this->uploadHandler->setBook($bookcode);
+    }
+
     public function getAction() {
-        $request = $this->getRequest();
 
-        $bookcode = $request->get('book');
-        $file = $request->get('file');
+        $this->beforeAction();
 
-        $uploadHandler = $this->get('jazzyweb.dodocuploadhandler');
+        $file = $this->request->get('file');
 
-        $uploadHandler->setBook($bookcode);
-
-//        echo '<pre>';print_r($uploadHandler->getOptions());exit;
-
-        $info = $uploadHandler->get_file_object($file);
-        $this->preAction();
+        $info = $this->uploadHandler->get_file_object($file);
+        
+        $this->afterAction();
+        
         header('Content-type: application/json');
         echo json_encode($info);
         exit;
     }
 
     public function getAllAction() {
-        $request = $this->getRequest();
 
-        $bookcode = $request->get('book');
-
-        $uploadHandler = $this->get('jazzyweb.dodocuploadhandler');
-
-        $uploadHandler->setBook($bookcode);
+        $this->beforeAction();
 
         $info = $uploadHandler->get_file_objects();
 
         header('Content-type: application/json');
-        $this->preAction();
+        
+        $this->afterAction();
         echo json_encode($info);
         exit;
     }
 
     public function deleteAction() {
-        $request = $this->getRequest();
-
-        $bookcode = $request->get('book');
-        $file = $request->get('file');
-
-        $uploadHandler = $this->get('jazzyweb.dodocuploadhandler');
-
-        $uploadHandler->setBook($bookcode);
-
-        $info = $uploadHandler->delete($file);
+        $this->beforeAction();
+        
+        $file = $this->request->get('file');
+        
+        $info = $this->uploadHandler->delete($file);
 
         header('Content-type: application/json');
-        $this->preAction();
+        
+        $this->afterAction();
         echo json_encode($info);
         exit;
     }
 
     public function postAction() {
-        $request = $this->getRequest();
-
-        $bookcode = $request->get('book');
-
-        $uploadHandler = $this->get('jazzyweb.dodocuploadhandler');
-
-        $uploadHandler->setBook($bookcode);
-
-        $uploadHandler->post();
         
-        $this->preAction();
+        $this->beforeAction();
+        
+
+        $info = $this->uploadHandler->post();
+
+        $this->afterAction();
+        
+        header('Vary: Accept');
+        $json = json_encode($info);
+        $redirect = isset($_REQUEST['redirect']) ?
+            stripslashes($_REQUEST['redirect']) : null;
+        if ($redirect) {
+            header('Location: '.sprintf($redirect, rawurlencode($json)));
+            return;
+        }
+        if (isset($_SERVER['HTTP_ACCEPT']) &&
+            (strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)) {
+            header('Content-type: application/json');
+        } else {
+            header('Content-type: text/plain');
+        }
+        echo $json;
 
         exit;
     }
