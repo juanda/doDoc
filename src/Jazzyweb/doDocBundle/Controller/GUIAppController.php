@@ -33,7 +33,7 @@ class GUIAppController extends Controller {
 
         $bookCode = $request->get('book');
         
-        return $this->render('JazzywebdoDocBundle:GUIApp:uploadtool.html.twig',
+        return $this->render('JazzywebdoDocBundle:GUIApp:uploadtool.html.php',
                 array('book_code' => $bookCode));
     }
     

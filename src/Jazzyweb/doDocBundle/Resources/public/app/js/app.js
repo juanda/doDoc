@@ -320,9 +320,10 @@ window.genericTools = Backbone.View.extend({
     
     uploadDoc: function(){
         console.log('genericTools.uploadDoc');
+        console.log('/doDoc/web/app_dev.php/uploadtool/' + app.status.currentBook);
         
         $('#upload_document_tool').modal('show');
-        $('#upload_document_tool-body').load('/doDoc/web/app_dev.php');
+        $('#upload_document_tool-body').load('/doDoc/web/app.php/uploadtool/' + app.status.currentBook);
     },        
     
     imageManagerTool: function(){
