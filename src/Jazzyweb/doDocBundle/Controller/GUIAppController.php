@@ -26,6 +26,17 @@ class GUIAppController extends Controller {
 
         return $this->render('JazzywebdoDocBundle:GUIApp:editor.html.twig', $params);
     }
+    
+    public function uploadToolAction(){
+        
+        $request = $this->getRequest();
+
+        $bookCode = $request->get('book');
+        
+        return $this->render('JazzywebdoDocBundle:GUIApp:uploadtool.html.twig',
+                array('book_code' => $bookCode));
+    }
+    
 
 }
 
