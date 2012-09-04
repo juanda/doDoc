@@ -7,19 +7,33 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UploadController extends Controller {
 
-    public function afterAction() {
+    public function afterAction($info) {
 
-        header('Pragma: no-cache');
-        header('Cache-Control: no-store, no-cache, must-revalidate');
-        header('Content-Disposition: inline; filename="files.json"');
-        header('X-Content-Type-Options: nosniff');
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Methods: OPTIONS, HEAD, GET, POST, PUT, DELETE');
-        header('Access-Control-Allow-Headers: X-File-Name, X-File-Type, X-File-Size');
+        $this->response->headers->set('Content-type', 'application/json');
+        $this->response->headers->set('Pragma', 'no-cache');
+        $this->response->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate');
+        $this->response->headers->set('Content-Disposition', 'inline; filename="files.json');
+        $this->response->headers->set('X-Content-Type-Option', 'nosniff');
+        $this->response->headers->set('Access-Control-Allow-Origin', '*');
+        $this->response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELET');
+        $this->response->headers->set('Access-Control-Allow-Headers', 'X-File-Name, X-File-Type, X-File-Size');
+
+        $this->response->setContent(json_encode($info));
+        
+        
+//        header('Pragma: no-cache');
+//        header('Cache-Control: no-store, no-cache, must-revalidate');
+//        header('Content-Disposition: inline; filename="files.json"');
+//        header('X-Content-Type-Options: nosniff');
+//        header('Access-Control-Allow-Origin: *');
+//        header('Access-Control-Allow-Methods: OPTIONS, HEAD, GET, POST, PUT, DELETE');
+//        header('Access-Control-Allow-Headers: X-File-Name, X-File-Type, X-File-Size');
     }
 
     public function beforeAction() {
         $this->request = $this->getRequest();
+
+        $this->response = new Response();
 
         $bookcode = $this->request->get('book');
 
@@ -35,67 +49,61 @@ class UploadController extends Controller {
         $file = $this->request->get('file');
 
         $info = $this->uploadHandler->get_file_object($file);
+
+        $this->afterAction($info);
         
-        $this->afterAction();
-        
-        header('Content-type: application/json');
-        echo json_encode($info);
-        exit;
+        return $this->response;
     }
 
     public function getAllAction() {
 
         $this->beforeAction();
 
-        $info = $uploadHandler->get_file_objects();
-
-        header('Content-type: application/json');
+        $info = $this->uploadHandler->get_file_objects();
+                
+        $this->afterAction($info);
         
-        $this->afterAction();
-        echo json_encode($info);
-        exit;
+        return $this->response;
     }
 
     public function deleteAction() {
         $this->beforeAction();
-        
+
         $file = $this->request->get('file');
-        
+
         $info = $this->uploadHandler->delete($file);
 
-        header('Content-type: application/json');
+        $this->afterAction($info);
         
-        $this->afterAction();
-        echo json_encode($info);
-        exit;
+        return $this->response;
     }
 
     public function postAction() {
-        
+
         $this->beforeAction();
-        
 
         $info = $this->uploadHandler->post();
 
-        $this->afterAction();
-        
-        header('Vary: Accept');
+        $this->response->headers->set('Vary', 'Accept');
+
         $json = json_encode($info);
         $redirect = isset($_REQUEST['redirect']) ?
-            stripslashes($_REQUEST['redirect']) : null;
+                stripslashes($_REQUEST['redirect']) : null;
         if ($redirect) {
-            header('Location: '.sprintf($redirect, rawurlencode($json)));
-            return;
+            $this->response->headers->set('Location', sprintf($redirect, rawurlencode($json)));
+
+            return $this->response;
         }
         if (isset($_SERVER['HTTP_ACCEPT']) &&
-            (strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)) {
-            header('Content-type: application/json');
+                (strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)) {
+            $this->response->headers->set('Content-type', 'application/json');
         } else {
-            header('Content-type: text/plain');
+            $this->response->headers->set('Content-type', 'text/plain');
         }
-        echo $json;
 
-        exit;
+        $this->afterAction($info);
+        
+        return $this->response;
     }
 
 }
