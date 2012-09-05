@@ -39,34 +39,63 @@ JazzywebdoDocBundle_guiapp_editor:
   requirements:
      _method: GET
      
-
-JazzywebdoDocBundle_guiapp_upload_tool:
-  pattern: /uploadtool/{book}
-  defaults: { _controller: JazzywebdoDocBundle:GUIApp:uploadTool }
-  requirements:
-     _method: GET
      
 JazzywebdoDocBundle_api_upload_getallfiles:
-  pattern: /uploadtool/book/{book}
+  pattern: /uploadtool/dir/{dir}
   defaults: { _controller: JazzywebdoDocBundle:Upload:getAll }
   requirements:
      _method: GET
-     
+
+JazzywebdoDocBundle_api_upload_images_getallfiles:
+  pattern: /uploadtool/images/{dir}
+  defaults: { _controller: JazzywebdoDocBundle:Upload:getAll }
+  requirements:
+     _method: GET
+
 JazzywebdoDocBundle_api_upload_getfile:
-  pattern: /uploadtool/book/{book}/{file}
+  pattern: /uploadtool/dir/{dir}/{file}
+  defaults: { _controller: JazzywebdoDocBundle:Upload:get }
+  requirements:
+     _method: GET
+
+JazzywebdoDocBundle_api_upload_images_getfile:
+  pattern: /uploadtool/images/{dir}/{file}
   defaults: { _controller: JazzywebdoDocBundle:Upload:get }
   requirements:
      _method: GET
 
 JazzywebdoDocBundle_api_upload_delete:
-  pattern: /uploadtool/book/{book}/{file}
+  pattern: /uploadtool/dir/{dir}/{file}
   defaults: { _controller: JazzywebdoDocBundle:Upload:delete }
   requirements:
      _method: DELETE
 
+JazzywebdoDocBundle_api_upload_images_delete:
+  pattern: /uploadtool/images/{dir}/{file}
+  defaults: { _controller: JazzywebdoDocBundle:Upload:delete }
+  requirements:
+     _method: DELETE
 
 JazzywebdoDocBundle_api_upload_post:
-  pattern: /uploadtool/book/{book}
+  pattern: /uploadtool/dir/{dir}
   defaults: { _controller: JazzywebdoDocBundle:Upload:post }
   requirements:
      _method: POST
+
+JazzywebdoDocBundle_api_upload_images_post:
+  pattern: /uploadtool/images/{dir}
+  defaults: { _controller: JazzywebdoDocBundle:Upload:post }
+  requirements:
+     _method: POST
+
+JazzywebdoDocBundle_guiapp_upload_tool:
+  pattern: /uploadtool/gui/{book}
+  defaults: { _controller: JazzywebdoDocBundle:GUIApp:uploadTool}
+  requirements:
+     _method: GET
+     
+JazzywebdoDocBundle_guiapp_upload_images_tool:
+  pattern: /uploadtool/gui/images/{book}
+  defaults: { _controller: JazzywebdoDocBundle:GUIApp:uploadTool, images: true}
+  requirements:
+     _method: GET

@@ -32,12 +32,12 @@ class GUIAppController extends Controller {
         $request = $this->getRequest();
 
         $bookCode = $request->get('book');
-        
+        $images   = $request->get('images');
+                                
         return $this->render('JazzywebdoDocBundle:GUIApp:uploadtool.html.php',
-                array('book_code' => $bookCode));
+                array('dir' => $bookCode, 'images' => $images));
     }
     
-
 }
 
 ?>

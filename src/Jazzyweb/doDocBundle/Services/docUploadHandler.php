@@ -20,6 +20,7 @@ class docUploadHandler {
     function __construct($request, $doDocManager, $urlApi, $thumbnailReldir) {
         $this->doDocManager = $doDocManager;
         $this->request = $request;
+        $this->thumbnailReldir = $thumbnailReldir;
 
         $this->options = array(
             'script_url' => $urlApi,
@@ -46,27 +47,28 @@ class docUploadHandler {
             // Set to true to rotate images based on EXIF meta data, if available:
             'orient_image' => false,
             'image_versions' => array(
-                // Uncomment the following version to restrict the size of
-                // uploaded images. You can also add additional versions with
-                // their own upload directories:
-                /*
-                  'large' => array(
-                  'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']).'/files/',
-                  'upload_url' => $this->getFullUrl().'/files/',
-                  'max_width' => 1920,
-                  'max_height' => 1200,
-                  'jpeg_quality' => 95
-                  ),
-                 */
-                'thumbnail' => array(
-                    'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']) . '/' . $thumbnailReldir .'/',
-                    'upload_url' => $request->getBasePath() . '/' . $thumbnailReldir. '/',
-                    'max_width' => 80,
-                    'max_height' => 80
-                )
+            // Uncomment the following version to restrict the size of
+            // uploaded images. You can also add additional versions with
+            // their own upload directories:
+            /*
+              'large' => array(
+              'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']).'/files/',
+              'upload_url' => $this->getFullUrl().'/files/',
+              'max_width' => 1920,
+              'max_height' => 1200,
+              'jpeg_quality' => 95
+              ),
+
+              'thumbnail' => array(
+              'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']) . '/' . $thumbnailReldir . '/',
+              'upload_url' => $request->getBasePath() . '/' . $thumbnailReldir . '/',
+              'max_width' => 80,
+              'max_height' => 80
+              )
+             */
             )
         );
-        
+
 //        echo '<pre>';
 //        print_r($this->options);
 //        echo '</pre>';
@@ -76,17 +78,43 @@ class docUploadHandler {
 //        }
     }
 
-    public function setBook($bookcode) {
-        $this->options['script_url'] .= '/' . $bookcode;
+    public function setBook($bookcode, $images) {
+
         $this->options['upload_dir'] .= '/'
                 . $bookcode
                 . '/'
-                . $this->doDocManager->getContentsDirname(). '/';
-               
+                . $this->doDocManager->getContentsDirname() . '/';
+
+        if ($images) {
+            $this->options['upload_dir'] .= 'images/';
+            $this->options['script_url'] .= '/images/' . $bookcode;
+        } else {
+            $this->options['script_url'] .= '/dir/' . $bookcode;
+        }
+
+        $this->options['image_versions']['thumbnail'] = array(
+            'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME'])
+            . '/'
+            . $this->thumbnailReldir
+            . '/'
+            . $bookcode
+            . '/',
+            'upload_url' => $this->request->getBasePath()
+            . '/'
+            . $this->thumbnailReldir
+            . '/'
+            . $bookcode
+            . '/',
+            'max_width' => 80,
+            'max_height' => 80
+        );
+
+        if (!file_exists($this->options['image_versions']['thumbnail']['upload_dir'])) {
+            mkdir($this->options['image_versions']['thumbnail']['upload_dir']);
+        }
     }
-    
-    public function getOptions()
-    {
+
+    public function getOptions() {
         return $this->options;
     }
 
@@ -105,7 +133,7 @@ class docUploadHandler {
 //        $file->delete_url = $this->options['script_url']
 //                . '?file=' . rawurlencode($file->name);
         $file->delete_url = $this->request->getBaseUrl() . $this->options['script_url'] . '/' . $file->name;
-                
+
         $file->delete_type = $this->options['delete_type'];
         if ($file->delete_type !== 'DELETE') {
             $file->delete_url .= '&_method=DELETE';
@@ -402,14 +430,15 @@ class docUploadHandler {
                                     $upload['type'] : null), isset($upload['error']) ? $upload['error'] : null
             );
         }
-        
-        return $info;       
+
+        return $info;
     }
 
     public function delete($file_name) {
 //        $file_name = isset($_REQUEST['file']) ?
 //                basename(stripslashes($_REQUEST['file'])) : null;
         $file_path = $this->options['upload_dir'] . $file_name;
+        //echo $file_path;exit;
         $success = is_file($file_path) && $file_name[0] !== '.' && unlink($file_path);
         if ($success) {
             foreach ($this->options['image_versions'] as $version => $options) {

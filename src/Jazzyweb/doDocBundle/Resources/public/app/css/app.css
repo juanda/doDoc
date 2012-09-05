@@ -20,9 +20,15 @@
     position: relative;
 }
 
-.modal {
-    width: 700px;
-    height: 450px;
+.modal-upload {
+    width: 750px;
+    height: 550px;
      
+}
+
+.modal-upload-body {
+  height: 450px;
+  padding: 15px;
+  overflow-y: auto;
 }
 

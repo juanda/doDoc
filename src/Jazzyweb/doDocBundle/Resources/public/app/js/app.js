@@ -258,8 +258,13 @@ window.genericTools = Backbone.View.extend({
     initialize: function(){
         $('#form_new_doc').on('shown', function () {
             console.log('genericTools showing modal');
-            $('#txt_new_doc').focus()
-        })
+            $('#txt_new_doc').focus();
+        });
+        
+        $('#upload_document_tool').on('hidden', function () {
+            console.log('genericTools hidding modal');
+            app.documentCollection.fetch();
+        });
     },
     
     events: {

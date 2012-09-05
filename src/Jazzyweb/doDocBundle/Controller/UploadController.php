@@ -26,11 +26,15 @@ class UploadController extends Controller {
 
         $this->response = new Response();
 
-        $bookcode = $this->request->get('book');
+        $route = $this->request->get('_route');
+
+        $images = (stripos($route, 'images'))? true : false;
+
+        $dir = $this->request->get('dir');
 
         $this->uploadHandler = $this->get('jazzyweb.dodocuploadhandler');
 
-        $this->uploadHandler->setBook($bookcode);
+        $this->uploadHandler->setBook($dir, $images);
     }
 
     public function getAction() {
@@ -42,7 +46,7 @@ class UploadController extends Controller {
         $info = $this->uploadHandler->get_file_object($file);
 
         $this->afterAction($info);
-        
+
         return $this->response;
     }
 
@@ -51,9 +55,9 @@ class UploadController extends Controller {
         $this->beforeAction();
 
         $info = $this->uploadHandler->get_file_objects();
-                
+
         $this->afterAction($info);
-        
+
         return $this->response;
     }
 
@@ -65,7 +69,7 @@ class UploadController extends Controller {
         $info = $this->uploadHandler->delete($file);
 
         $this->afterAction($info);
-        
+
         return $this->response;
     }
 
@@ -93,8 +97,32 @@ class UploadController extends Controller {
         }
 
         $this->afterAction($info);
-        
+
         return $this->response;
+    }
+
+    public function getImagesAction() {
+        $this->images = true;
+
+        $this->getAction();
+    }
+
+    public function getAllImagesAction() {
+        $this->images = true;
+
+        $this->getAllAction();
+    }
+
+    public function deleteImagesAction() {
+        $this->images = true;
+
+        $this->deleteAction();
+    }
+
+    public function postImagesAction() {
+        $this->images = true;
+
+        $this->postAction();
     }
 
 }

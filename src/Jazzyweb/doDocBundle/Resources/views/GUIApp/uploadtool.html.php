@@ -34,7 +34,11 @@
     </head>
     <body>
         <!-- The file upload form used as target for the file upload widget -->
-        <form id="fileupload" action="<?php echo $view['router']->generate('JazzywebdoDocBundle_api_upload_post', array('book' => $book_code)) ?>" method="POST" enctype="multipart/form-data">
+        <?php if($images): ?>       
+        <form id="fileupload" action="<?php echo $view['router']->generate('JazzywebdoDocBundle_api_upload_images_post', array('dir' => $dir)) ?>" method="POST" enctype="multipart/form-data">           
+         <?php else: ?>
+        <form id="fileupload" action="<?php echo $view['router']->generate('JazzywebdoDocBundle_api_upload_post', array('dir' => $dir)) ?>" method="POST" enctype="multipart/form-data">           
+        <?php endif; ?>
             <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
             <div class="row fileupload-buttonbar">
                 <div class="span7">
@@ -85,7 +89,7 @@
             {% if (file.error) { %}
             <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
             {% } else if (o.files.valid && !i) { %}
-            <td>
+            <td style="width: 50px;">
                 <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" style="width:0%;"></div></div>
             </td>
             <td class="start">{% if (!o.options.autoUpload) { %}
