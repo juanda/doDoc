@@ -261,7 +261,7 @@ window.genericTools = Backbone.View.extend({
             $('#txt_new_doc').focus();
         });
         
-        $('#upload_document_tool').on('hidden', function () {
+        $('#upload_tool').on('hidden', function () {
             console.log('genericTools hidding modal');
             app.documentCollection.fetch();
         });
@@ -327,13 +327,19 @@ window.genericTools = Backbone.View.extend({
         console.log('genericTools.uploadDoc');
         console.log('/doDoc/web/app_dev.php/uploadtool/' + app.status.currentBook);
         
-        $('#upload_document_tool').modal('show');
-        $('#upload_document_tool-body').load('/doDoc/web/app.php/uploadtool/' + app.status.currentBook);
-    },        
+        $('#txt_title_upload_tool').html('Upload and manage documents');
+        $('#frm_upload_tool').attr('src','/doDoc/web/app_dev.php/uploadtool/gui/' + app.status.currentBook);
+       
+        $('#upload_tool').modal('show');
+    },      
     
     imageManagerTool: function(){
         console.log('genericTools.imageManagerTool');
-    },
+        
+        $('#txt_title_upload_tool').html('Upload and manage images');
+        $('#frm_upload_tool').attr('src','/doDoc/web/app_dev.php/uploadtool/gui/images/' + app.status.currentBook);
+        $('#upload_tool').modal('show');
+    },  
     
     togglePreview: function(a){        
         console.log('genericTools.togglePreview');
