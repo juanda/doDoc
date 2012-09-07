@@ -99,3 +99,9 @@ JazzywebdoDocBundle_guiapp_upload_images_tool:
   defaults: { _controller: JazzywebdoDocBundle:GUIApp:uploadTool, images: true}
   requirements:
      _method: GET
+     
+JazzywebdoDocBundle_easybook_new:
+  pattern: /easybook/new/{book}
+  defaults: { _controller: JazzywebdoDocBundle:Easybook:newBook }
+  requirements:
+     _method: GET
