@@ -9,6 +9,8 @@ parameters:
     jazzyweb.dodocuploadhandler.url_api: /uploadtool
     jazzyweb.dodocuploadhandler.thumbnail_reldir: thumbnail
     
+    jazzyweb.dodoceasybookbridge.class: Jazzyweb\doDocBundle\Services\EasyBookBridge
+    
 
 services:
     jazzyweb.dodocmanager:
@@ -28,3 +30,10 @@ services:
          - "@jazzyweb.dodocmanager"      
          - %jazzyweb.dodocuploadhandler.url_api%
          - %jazzyweb.dodocuploadhandler.thumbnail_reldir%
+    
+    jazzyweb.dodoceasybookbridge:
+       scope: request
+       class: %jazzyweb.dodoceasybookbridge.class%
+       arguments:
+         - "@request"
+         - "@jazzyweb.dodocmanager"

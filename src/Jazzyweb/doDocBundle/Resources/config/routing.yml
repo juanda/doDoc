@@ -101,7 +101,19 @@ JazzywebdoDocBundle_guiapp_upload_images_tool:
      _method: GET
      
 JazzywebdoDocBundle_easybook_new:
-  pattern: /easybook/new/{book}
-  defaults: { _controller: JazzywebdoDocBundle:Easybook:newBook }
+  pattern: /book/{book}
+  defaults: { _controller: JazzywebdoDocBundle:EasybookRest:newBook }
+  requirements:
+     _method: POST
+
+JazzywebdoDocBundle_easybook_publish:
+  pattern: /book/{slug}/edition/{edition}
+  defaults: { _controller: JazzywebdoDocBundle:EasybookRest:publishBook }
+  requirements:
+     _method: PUT
+
+JazzywebdoDocBundle_easybook_get_edition:
+  pattern: /book/{slug}/edition/{edition}
+  defaults: { _controller: JazzywebdoDocBundle:EasybookRest:getEdition }
   requirements:
      _method: GET

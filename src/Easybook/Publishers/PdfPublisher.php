@@ -112,10 +112,10 @@ class PdfPublisher extends BasePublisher
         $prince->convert_file_to_file($temp, $this->app['publishing.dir.output'].'/book.pdf', $errorMessages);
 
         // show PDF conversion errors
-        if (count($errorMessages) > 0) {
-            foreach ($errorMessages as $message) {
-                echo $message[0].': '.$message[2].' ('.$message[1].')'."\n";
-            }
-        }
+//        if (count($errorMessages) > 0) {
+//            foreach ($errorMessages as $message) {
+//                echo $message[0].': '.$message[2].' ('.$message[1].')'."\n";
+//            }
+//        }
     }
 }
