@@ -94,17 +94,19 @@ class EasyBookBridge {
                 break;
 
             case 'html':
-                
+
                 $dir = $this->appEasyBook->get('publishing.dir.output')
-                    . '/'
-                    . $this->appEasyBook->get('publishing.edition');
+                        . '/'
+                        . $this->appEasyBook->get('publishing.edition');
                 
-                               
-                Toolkit::zip($dir, $dir.'/tmp/book.zip');
-                
-                $this->appEasyBook->get('filesystem')->copy(
-                        '/tmp/book.zip', $dir . '/book.zip', true
-                );
+                $bookZip = $dir . '/book.zip';
+
+                if (file_exists($bookZip)) {
+                    unlink($bookZip);
+                }
+
+                Toolkit::zip($dir, $bookZip);
+
                 $ext = "zip";
                 $mime = "application/zip";
                 break;
