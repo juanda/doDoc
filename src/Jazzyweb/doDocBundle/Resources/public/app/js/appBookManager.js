@@ -1,3 +1,5 @@
+
+
 window.bookModel = Backbone.Model.extend({
     
     url: function(){
@@ -8,54 +10,68 @@ window.bookCollection = Backbone.Collection.extend({
       
     });
 
-jQuery(document).ready(function(){ 
-    jQuery("#books").jqGrid({
-        url: config.webBasePath + '/books',
-        datatype: "json",
-        mtype: 'GET',
-        colNames:[ 'Name', 'slug', 'Description'],
-        colModel:[
-        {
-            name:'name',
-            index:'name', 
-            width:55, 
-            sortable:false, 
-            editable:false, 
-            editoptions:{
-                readonly:true,
-                size:10
-            }
-        },
 
-        {
-            name:'slug',
-            index:'slug', 
-            width:200,
-            editable:false
-        },
+jQuery("#books").jqGrid({
+    url:config.webBasePath + '/books', 
+    datatype: "json", 
+    colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes'], 
+    colModel:[ {
+        name:'id',
+        index:'id', 
+        width:55
+    }, {
+        name:'invdate',
+        index:'invdate', 
+        width:90, 
+        editable:true
+    }, {
+        name:'name',
+        index:'name', 
+        width:100,
+        editable:true
+    }, {
+        name:'amount',
+        index:'amount', 
+        width:80, 
+        align:"right",
+        editable:true
+    }, {
+        name:'tax',
+        index:'tax', 
+        width:80, 
+        align:"right",
+        editable:true
+    }, {
+        name:'total',
+        index:'total', 
+        width:80,
+        align:"right",
+        editable:true
+    }, {
+        name:'note',
+        index:'note', 
+        width:150, 
+        sortable:false,
+        editable:true,
+        formatter:'showlink', 
+        formatoptions:{baseLinkUrl:'someurl.php', addParam: '&action=edit'}
 
-        {
-            name:'description',
-            index:'description', 
-            width:200,
-            editable:true
-        },
-        
-        ],
-        jsonReader : {
-            repeatitems:false
-        },
-        rowNum:10,
-        rowList:[10,20,30],
-        pager: jQuery('#gridpager'),
-        sortname: 'name',
-        viewrecords: true,
-        sortorder: "asc",
-        caption:"Books",
-        editurl:"/jqGridModel?model=Wine"
-    })
+    } ], 
+    rowNum:10, 
+    rowList:[10,20,30], 
+    pager: '#pager', 
+    sortname: 'id', 
+    viewrecords: true, 
+    sortorder: "desc", 
+    editurl: "server.php", 
+    caption: "Using navigator"
 });
-
+jQuery("#books").jqGrid('navGrid',"#pager",{
+    edit:false,
+    add:false,
+    del:false
+});
+jQuery("#books").jqGrid('inlineNav',"#pager");
 
 
 

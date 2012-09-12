@@ -5,9 +5,11 @@ namespace Jazzyweb\doDocBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
-class APIRestController extends Controller {
+class APIRestController extends Controller
+{
 
-    protected function sendResponse($data) {
+    protected function sendResponse($data)
+    {
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($data['json']));
@@ -16,7 +18,8 @@ class APIRestController extends Controller {
         return $response;
     }
 
-    public function getAllDocumentsAction() {
+    public function getAllDocumentsAction()
+    {
 
         $request = $this->getRequest();
 
@@ -29,7 +32,8 @@ class APIRestController extends Controller {
         return $this->sendResponse($result);
     }
 
-    public function getDocumentAction() {
+    public function getDocumentAction()
+    {
         $request = $this->getRequest();
 
         $bookCode = $request->get('book');
@@ -42,7 +46,8 @@ class APIRestController extends Controller {
         return $this->sendResponse($result);
     }
 
-    public function newDocumentAction() {
+    public function newDocumentAction()
+    {
         $request = $this->getRequest();
 
         $bookCode = $request->get('book');
@@ -60,7 +65,8 @@ class APIRestController extends Controller {
         return $this->sendResponse($result);
     }
 
-    public function updateDocumentAction() {
+    public function updateDocumentAction()
+    {
         $request = $this->getRequest();
 
         $bookCode = $request->get('book');
@@ -78,7 +84,8 @@ class APIRestController extends Controller {
         return $this->sendResponse($result);
     }
 
-    public function createOrSaveDocumentAction() {
+    public function createOrSaveDocumentAction()
+    {
         $request = $this->getRequest();
 
         $bookCode = $request->get('book');
@@ -100,7 +107,8 @@ class APIRestController extends Controller {
         return $this->sendResponse($result);
     }
 
-    public function removeDocumentAction() {
+    public function removeDocumentAction()
+    {
         $request = $this->getRequest();
 
         $bookCode = $request->get('book');
@@ -113,16 +121,15 @@ class APIRestController extends Controller {
         return $this->sendResponse($result);
     }
 
-    public function booksAction() {
+    public function booksAction()
+    {
+
+        $json_url = "http://www.trirand.com/blog/jqgrid/server.php?q=2&_search=false&nd=1347463000773&rows=10&page=1&sidx=id&sord=desc";
+        $json = file_get_contents($json_url);
+        $results['json'] = json_decode($json, TRUE);
         
-        $results = array(
-            'json' => array(
-                'name' => 'La Odisea',
-                'slug' => 'la-odisea',
-                'descripcion' => 'Un libro mu chulo'
-            ),
-            'status_code' => 200,
-        );
+        $results['status_code'] = 200;
+
         return $this->sendResponse($results);
     }
 

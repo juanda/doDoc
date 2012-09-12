@@ -2,6 +2,7 @@
 
 {% block javascripts %}
 {{  parent() }}
+<script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/jquery.jqGrid/js/i18n/grid.locale-es.js') }}" ></script>
 <script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/jquery.jqGrid/js/jquery.jqGrid.min.js') }}"></script>    
 <script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/app/js/init.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/app/js/appBookManager.js') }}"></script>    
@@ -10,14 +11,16 @@
 
 {% block stylesheets %}
 {{ parent() }}
-<link src="{{ asset('bundles/jazzywebdodoc/jquery/css/ui-lightness/jquery-ui-1.8.23.custom.css') }}"/>
+<link href="{{ asset('bundles/jazzywebdodoc/jquery/css/ui-darkness/jquery-ui-1.8.23.custom.css') }}" type="text/css" rel="stylesheet"/>
 <link href="{{ asset('bundles/jazzywebdodoc/jquery.jqGrid/css/ui.jqgrid.css') }}" type="text/css" rel="stylesheet" />
+<link href="{{ asset('bundles/jazzywebdodoc/app/css/jqgrid_tuning.css') }}" type="text/css" rel="stylesheet" />
+
 {% endblock %}
 
 {% block container %}
 
 <table id="books"></table>
 
-<div id="gridpager"></div>
+<div id="pager"></div>
 
 {% endblock %}
