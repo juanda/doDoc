@@ -7,12 +7,10 @@ use Easybook\Util\Toolkit;
 
 class EasyBookBridge {
 
-    protected $request;
     protected $docHandler;
     protected $appEasyBook;
 
-    public function __construct($request, $docHandler) {
-        $this->request = $request;
+    public function __construct($docHandler) {
         $this->docHandler = $docHandler;
 
         $this->appEasyBook = new Application();
@@ -21,10 +19,10 @@ class EasyBookBridge {
         $this->appEasyBook->set('validator', new EasyBookValidator($this->appEasyBook));
     }
 
-    public function newBook() {
+    public function newBook($bookTitle) {
 
         $title = EasyBookValidator::validateNonEmptyString(
-                        'title', $this->request->get('book')
+                        'title', $bookTitle
         );
 
         $dir = EasyBookValidator::validateDirExistsAndWritable($this->docHandler->getDocDir());
@@ -66,9 +64,9 @@ class EasyBookBridge {
         return $out;
     }
 
-    public function publishBook() {
+    public function publishBook($slug, $edition) {
 
-        $this->setParamsForPublish();
+        $this->setParamsForPublish($slug, $edition);
 
         // 1-line magic publication!
         $this->appEasyBook->get('publisher')->publishBook();
@@ -79,9 +77,9 @@ class EasyBookBridge {
         return $out;
     }
 
-    public function getEdition() {
+    public function getEdition($slug, $edition) {
 
-        $this->setParamsForPublish();
+        $this->setParamsForPublish($slug, $edition);
 
         $outputFormat = $this->appEasyBook->edition('format');
 
@@ -98,7 +96,7 @@ class EasyBookBridge {
                 $dir = $this->appEasyBook->get('publishing.dir.output')
                         . '/'
                         . $this->appEasyBook->get('publishing.edition');
-                
+
                 $bookZip = $dir . '/book.zip';
 
                 if (file_exists($bookZip)) {
@@ -143,9 +141,35 @@ class EasyBookBridge {
         }
     }
 
-    protected function setParamsForPublish() {
-        $slug = $this->request->get('slug');
-        $edition = $this->request->get('edition');
+    public function getEditionNames($slug) {
+        
+        $dir = $this->docHandler->getDocDir();
+
+        $this->configurator = $this->appEasyBook->get('configurator');
+        $this->validator = $this->appEasyBook->get('validator');
+        
+        // validate book dir and add some useful values to the app configuration
+        $bookDir = $this->validator->validateBookDir($slug, $dir);
+        
+        $this->appEasyBook->set('publishing.dir.book', $bookDir);        
+        $this->appEasyBook->set('publishing.book.slug', $slug);
+                
+        $this->configurator->loadBookConfiguration();
+        
+        $editions = $this->appEasyBook->book('editions');
+        
+        $editionNames = array();
+        foreach ($editions as $k=>$e)
+        {
+            $editionNames[] = $k;
+        }
+        
+        return $editionNames;
+        
+    }
+
+    protected function setParamsForPublish($slug, $edition) {
+
         $dir = $this->docHandler->getDocDir();
 
         $this->configurator = $this->appEasyBook->get('configurator');

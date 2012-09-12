@@ -14,8 +14,6 @@
 {% block stylesheets %}
 <link href="{{ asset('bundles/jazzywebdodoc/bootstrap/css/bootstrap.css') }}" type="text/css" rel="stylesheet" />
 
-<link href="{{ asset('bundles/jazzywebdodoc/app/css/app.css') }}" type="text/css" rel="stylesheet" />
-
 <style>
         body {
             padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
@@ -67,7 +65,7 @@
 
 {% block javascripts %}
 
-        <script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/jquery/jquery.js') }}"></script>  
+        <script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/jquery/js/jquery.js') }}"></script>  
         <script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/bootstrap/js/bootstrap.min.js') }}"></script>    
         <script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/backbone/underscore.js') }}"></script>    
         <script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/backbone/backbone.js') }}"></script>    
@@ -75,9 +73,5 @@
         <!-- For markitup
         <script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/markitup/markitup/jquery.markitup.js') }}"></script>    
         <script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/markitup/markitup/sets/markdown/set.js') }}"></script>    
-        -->
-        <script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/epiceditor/js/epiceditor.min.js') }}"></script>    
-        <script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/app/js/init.js') }}"></script>    
-        <script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/app/js/app.js') }}"></script>    
-
+        -->        
 {% endblock %}

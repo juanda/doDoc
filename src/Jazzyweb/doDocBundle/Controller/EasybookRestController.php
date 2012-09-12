@@ -18,9 +18,10 @@ class EasybookRestController extends Controller {
 
     public function newBookAction() {
 
+        $bookName = $this->getRequest()->get('book');
         try {
             $easyBook = $this->get('jazzyweb.dodoceasybookbridge');
-            $result = $easyBook->newBook();
+            $result = $easyBook->newBook($bookName);
         } catch (\Exception $e) {
 
             $result['json']['message'] = $e->getMessage();
@@ -32,9 +33,12 @@ class EasybookRestController extends Controller {
 
     public function publishBookAction() {
 
+        $slug = $this->getRequest()->get('slug');
+        $edition = $this->getRequest()->get('edition');
+
         try {
             $easyBook = $this->get('jazzyweb.dodoceasybookbridge');
-            $result = $easyBook->publishBook();
+            $result = $easyBook->publishBook($slug, $edition);
         } catch (\Exception $e) {
             $result['json']['message'] = $e->getMessage();
             $result['status_code'] = 500;
@@ -44,21 +48,22 @@ class EasybookRestController extends Controller {
     }
 
     public function getEditionAction() {
-        
+        $slug = $this->getRequest()->get('slug');
+        $edition = $this->getRequest()->get('edition');
         try {
             $easyBook = $this->get('jazzyweb.dodoceasybookbridge');
-            list($result,$mime, $ext) = $easyBook->getEdition();
+            list($result, $mime, $ext) = $easyBook->getEdition($slug, $edition);
             $response = new Response();
             $response->headers->set('Content-Type', $mime);
-            $response->headers->set('Content-Disposition', 'filename=book'. '.' . $ext);
+            $response->headers->set('Content-Disposition', 'filename=book' . '.' . $ext);
             $response->setContent($result);
             return $response;
         } catch (\Exception $e) {
             $result['json']['message'] = $e->getMessage();
             $result['status_code'] = 500;
-            
+
             return $this->sendResponse($result);
-        }                        
+        }
     }
 
 }

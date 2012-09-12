@@ -32,6 +32,13 @@ JazzywebdoDocBundle_api_rest_delete_doc:
    requirements:
      _method: DELETE
      _format: json
+     
+JazzywebdoDocBundle_api_rest_get_books:
+   pattern: /books
+   defaults: { _controller: JazzywebdoDocBundle:APIRest:books }
+   requirements:
+     _method: GET
+     _format: json
 
 JazzywebdoDocBundle_guiapp_editor:
   pattern: /editor/{book}
@@ -97,6 +104,12 @@ JazzywebdoDocBundle_guiapp_upload_tool:
 JazzywebdoDocBundle_guiapp_upload_images_tool:
   pattern: /uploadtool/gui/images/{book}
   defaults: { _controller: JazzywebdoDocBundle:GUIApp:uploadTool, images: true}
+  requirements:
+     _method: GET
+
+JazzywebdoDocBundle_guiapp_book_manager:
+  pattern: /bookmanager
+  defaults: { _controller: JazzywebdoDocBundle:GUIApp:bookManager }
   requirements:
      _method: GET
      

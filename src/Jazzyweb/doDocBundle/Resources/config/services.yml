@@ -31,9 +31,7 @@ services:
          - %jazzyweb.dodocuploadhandler.url_api%
          - %jazzyweb.dodocuploadhandler.thumbnail_reldir%
     
-    jazzyweb.dodoceasybookbridge:
-       scope: request
+    jazzyweb.dodoceasybookbridge:       
        class: %jazzyweb.dodoceasybookbridge.class%
        arguments:
-         - "@request"
          - "@jazzyweb.dodocmanager"

@@ -1,0 +1,23 @@
+{% extends 'JazzywebdoDocBundle:GUIApp:layout.html.twig' %}
+
+{% block javascripts %}
+{{  parent() }}
+<script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/jquery.jqGrid/js/jquery.jqGrid.min.js') }}"></script>    
+<script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/app/js/init.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/app/js/appBookManager.js') }}"></script>    
+
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link src="{{ asset('bundles/jazzywebdodoc/jquery/css/ui-lightness/jquery-ui-1.8.23.custom.css') }}"/>
+<link href="{{ asset('bundles/jazzywebdodoc/jquery.jqGrid/css/ui.jqgrid.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block container %}
+
+<table id="books"></table>
+
+<div id="gridpager"></div>
+
+{% endblock %}

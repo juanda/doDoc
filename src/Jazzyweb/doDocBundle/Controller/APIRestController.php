@@ -105,13 +105,25 @@ class APIRestController extends Controller {
 
         $bookCode = $request->get('book');
         $docName = $request->get('docname');
-        
+
         $docService = $this->get('jazzyweb.dodocmanager');
-        
+
         $result = $docService->removeDocument($bookCode, $docName);
-        
+
         return $this->sendResponse($result);
+    }
+
+    public function booksAction() {
         
+        $results = array(
+            'json' => array(
+                'name' => 'La Odisea',
+                'slug' => 'la-odisea',
+                'descripcion' => 'Un libro mu chulo'
+            ),
+            'status_code' => 200,
+        );
+        return $this->sendResponse($results);
     }
 
 }

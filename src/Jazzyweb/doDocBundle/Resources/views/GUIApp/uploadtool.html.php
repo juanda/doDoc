@@ -141,8 +141,8 @@
     </script>
 
 
-    <script src="<?php echo $view['assets']->getUrl('bundles/jazzywebdodoc/jquery/jquery.js') ?>"></script>
-    <script src="<?php echo $view['assets']->getUrl('bundles/jazzywebdodoc/jquery/jquery-ui-1.8.23.custom.min.js') ?>"></script>
+    <script src="<?php echo $view['assets']->getUrl('bundles/jazzywebdodoc/jquery/js/jquery.js') ?>"></script>
+    <script src="<?php echo $view['assets']->getUrl('bundles/jazzywebdodoc/jquery/js/jquery-ui-1.8.23.custom.min.js') ?>"></script>
 
     <!-- The Templates plugin is included to render the upload/download listings -->
     <script src="<?php echo $view['assets']->getUrl('bundles/jazzywebdodoc/blueimpFileUpload/js/tmpl.min.js') ?>"></script>
