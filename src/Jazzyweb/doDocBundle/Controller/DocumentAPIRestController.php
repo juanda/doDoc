@@ -5,7 +5,7 @@ namespace Jazzyweb\doDocBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
-class APIRestController extends Controller
+class DocumentAPIRestController extends Controller
 {
 
     protected function sendResponse($data)
@@ -119,18 +119,6 @@ class APIRestController extends Controller
         $result = $docService->removeDocument($bookCode, $docName);
 
         return $this->sendResponse($result);
-    }
-
-    public function booksAction()
-    {
-
-        $json_url = "http://www.trirand.com/blog/jqgrid/server.php?q=2&_search=false&nd=1347463000773&rows=10&page=1&sidx=id&sord=desc";
-        $json = file_get_contents($json_url);
-        $results['json'] = json_decode($json, TRUE);
-        
-        $results['status_code'] = 200;
-
-        return $this->sendResponse($results);
-    }
+    }   
 
 }

@@ -1,52 +1,51 @@
+# Documents API Rest routes
+
 JazzywebdoDocBundle_api_rest_get_collection:
    pattern:  /book/{book}/docs
-   defaults: { _controller: JazzywebdoDocBundle:APIRest:getAllDocuments }
+   defaults: { _controller: JazzywebdoDocBundle:DocumentAPIRest:getAllDocuments }
    requirements:
      _method: GET
      _format: json
 
 JazzywebdoDocBundle_api_rest_get_doc:
    pattern: /book/{book}/docs/{docname}
-   defaults: { _controller: JazzywebdoDocBundle:APIRest:getDocument }
+   defaults: { _controller: JazzywebdoDocBundle:DocumentAPIRest:getDocument }
    requirements:
      _method: GET
      _format: json
     
 JazzywebdoDocBundle_api_rest_post_doc:
    pattern: /book/{book}/docs/{docname}
-   defaults: { _controller: JazzywebdoDocBundle:APIRest:createOrSaveDocument }
+   defaults: { _controller: JazzywebdoDocBundle:DocumentAPIRest:createOrSaveDocument }
    requirements:
      _method: POST
      _format: json
     
 JazzywebdoDocBundle_api_rest_put_doc:
    pattern: /book/{book}/docs/{docname}
-   defaults: { _controller: JazzywebdoDocBundle:APIRest:createOrSaveDocument }
+   defaults: { _controller: JazzywebdoDocBundle:DocumentAPIRest:createOrSaveDocument }
    requirements:
      _method: PUT
      _format: json
 
 JazzywebdoDocBundle_api_rest_delete_doc:
    pattern: /book/{book}/docs/{docname}
-   defaults: { _controller: JazzywebdoDocBundle:APIRest:removeDocument }
+   defaults: { _controller: JazzywebdoDocBundle:DocumentAPIRest:removeDocument }
    requirements:
      _method: DELETE
      _format: json
-     
+    
+# Books API routes
+
 JazzywebdoDocBundle_api_rest_get_books:
    pattern: /books
-   defaults: { _controller: JazzywebdoDocBundle:APIRest:books }
+   defaults: { _controller: JazzywebdoDocBundle:BookAPIRest:getAllBooks }
    requirements:
      _method: GET
      _format: json
+     
+# Upload tool API routes
 
-JazzywebdoDocBundle_guiapp_editor:
-  pattern: /editor/{book}
-  defaults: { _controller: JazzywebdoDocBundle:GUIApp:editor }
-  requirements:
-     _method: GET
-     
-     
 JazzywebdoDocBundle_api_upload_getallfiles:
   pattern: /uploadtool/dir/{dir}
   defaults: { _controller: JazzywebdoDocBundle:Upload:getAll }
@@ -95,6 +94,14 @@ JazzywebdoDocBundle_api_upload_images_post:
   requirements:
      _method: POST
 
+# GUI Routes
+JazzywebdoDocBundle_guiapp_editor:
+  pattern: /editor/{book}
+  defaults: { _controller: JazzywebdoDocBundle:GUIApp:editor }
+  requirements:
+     _method: GET
+     
+
 JazzywebdoDocBundle_guiapp_upload_tool:
   pattern: /uploadtool/gui/{book}
   defaults: { _controller: JazzywebdoDocBundle:GUIApp:uploadTool}
@@ -112,7 +119,8 @@ JazzywebdoDocBundle_guiapp_book_manager:
   defaults: { _controller: JazzywebdoDocBundle:GUIApp:bookManager }
   requirements:
      _method: GET
-     
+
+# Easybook service routes
 JazzywebdoDocBundle_easybook_new:
   pattern: /book/{book}
   defaults: { _controller: JazzywebdoDocBundle:EasybookRest:newBook }

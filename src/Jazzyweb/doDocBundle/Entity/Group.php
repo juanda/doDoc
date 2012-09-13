@@ -3,15 +3,16 @@
 namespace Jazzyweb\doDocBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Jazzyweb\doDocBundle\Entity\Book
+ * Jazzyweb\doDocBundle\Entity\Group
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="Jazzyweb\doDocBundle\Entity\BookRepository")
+ * @ORM\Entity(repositoryClass="Jazzyweb\doDocBundle\Entity\GroupRepository")
  */
-class Book
-{
+class Group {
+
     /**
      * @var integer $id
      *
@@ -22,13 +23,6 @@ class Book
     private $id;
 
     /**
-     * @var string $slug
-     *
-     * @ORM\Column(name="slug", type="string", length=255)
-     */
-    private $slug;
-
-    /**
      * @var string $name
      *
      * @ORM\Column(name="name", type="string", length=255)
@@ -36,16 +30,16 @@ class Book
     private $name;
 
     /**
-     * @var text $description
+     * @var string $rol
      *
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="rol", type="string", length=255)
      */
-    private $description;
-    
-    // ASSOCIATIONS
-    
+    private $rol;
+
+    ////ASSOCIATIONS////
+
     /**
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="books")
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="groups")
      */
     private $users;
    
@@ -54,36 +48,13 @@ class Book
         $this->users = new ArrayCollection();
     }
 
-
-    
     /**
      * Get id
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
-    }
-
-    /**
-     * Set slug
-     *
-     * @param string $slug
-     */
-    public function setSlug($slug)
-    {
-        $this->slug = $slug;
-    }
-
-    /**
-     * Get slug
-     *
-     * @return string 
-     */
-    public function getSlug()
-    {
-        return $this->slug;
     }
 
     /**
@@ -91,8 +62,7 @@ class Book
      *
      * @param string $name
      */
-    public function setName($name)
-    {
+    public function setName($name) {
         $this->name = $name;
     }
 
@@ -101,32 +71,29 @@ class Book
      *
      * @return string 
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
     /**
-     * Set description
+     * Set rol
      *
-     * @param text $description
+     * @param string $rol
      */
-    public function setDescription($description)
-    {
-        $this->description = $description;
+    public function setRol($rol) {
+        $this->rol = $rol;
     }
 
     /**
-     * Get description
+     * Get rol
      *
-     * @return text 
+     * @return string 
      */
-    public function getDescription()
-    {
-        return $this->description;
+    public function getRol() {
+        return $this->rol;
     }
-    
-     /**
+
+    /**
      * Add user
      *
      * @param Jazzyweb\doDocBundle\Entity\Usuario $usuarios
@@ -143,5 +110,9 @@ class Book
     public function getUsers() {
         return $this->users;
     }
-        
+
+    public function __toString() {
+        return $this->getName();
+    }
+
 }
