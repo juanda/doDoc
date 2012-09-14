@@ -14,7 +14,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * Jazzyweb\doDocBundle\Entity\User
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="Jazzyweb\doDocBundle\UserRepository")
+ * @ORM\Entity(repositoryClass="Jazzyweb\doDocBundle\Entity\UserRepository")
  * 
  * @UniqueEntity(fields="email", message="The mail is already in use")
  * @UniqueEntity(fields="username", message="The username is already in use")

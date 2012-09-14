@@ -18,7 +18,8 @@ class BookAPIRestController extends Controller {
     }
     
     public function getAllBooksAction() {
-
+        
+        echo $this->getRequest()->get('rows');exit;
         $json_url = "http://www.trirand.com/blog/jqgrid/server.php?q=2&_search=false&nd=1347463000773&rows=10&page=1&sidx=id&sord=desc";
         $json = file_get_contents($json_url);
         $results['json'] = json_decode($json, TRUE);

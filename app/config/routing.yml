@@ -5,3 +5,7 @@ JazzywebdoDocBundle:
 JMDServerBundle:
     resource: "@JMDServerBundle/Resources/config/routing.yml"	
     prefix:   /
+
+JazzywebdoDocBundle_books_crud:
+    resource: "@JazzywebdoDocBundle/Resources/config/routing/book.yml"
+    prefix:   /books_crud
