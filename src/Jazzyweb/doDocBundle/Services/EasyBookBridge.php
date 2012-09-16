@@ -19,7 +19,7 @@ class EasyBookBridge {
         $this->appEasyBook->set('validator', new EasyBookValidator($this->appEasyBook));
     }
 
-    public function newBook($bookTitle) {
+    public function createBook($bookTitle) {
 
         $title = EasyBookValidator::validateNonEmptyString(
                         'title', $bookTitle
@@ -56,12 +56,8 @@ class EasyBookBridge {
             ),
             'title' => $title,
         ));
-
-
-        $out['json']['message'] = "The book '" . $title . "' has been created. You can start writing it";
-        $out['status_code'] = 200;
-
-        return $out;
+        
+        return $slug;
     }
 
     public function publishBook($slug, $edition) {
@@ -198,6 +194,16 @@ class EasyBookBridge {
 
         // resolve book+edition configuration
         $this->configurator->resolveConfiguration();
+    }
+    
+    public function sayHello()
+    {
+        return "Hello I'm EasyBookBridge service";
+    }
+    
+    public function getAppEasyBook()
+    {
+        return $this->appEasyBook;
     }
 
 }

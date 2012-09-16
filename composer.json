@@ -21,7 +21,16 @@
         
         "dflydev/markdown":         "dev-master",
         "easybook/geshi":           "*",
-        "pimple/pimple":            "dev-master"
+        "pimple/pimple":            "dev-master",
+        
+        "sonata-project/cache-bundle": "master",
+        "sonata-project/block-bundle": "master",
+        "sonata-project/jquery-bundle": "master",
+        "knplabs/knp-menu": "1.1.2",
+        "sonata-project/exporter": "master",
+        "sonata-project/doctrine-orm-admin-bundle": "master",
+        "sonata-project/admin-bundle": "master"
+        
     },
     "scripts": {
         "post-install-cmd": [

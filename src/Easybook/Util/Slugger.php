@@ -33,7 +33,9 @@ class Slugger
         $string = strip_tags($string);
 
         if (function_exists('iconv')) {
-            $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+            // iconv doesn't work properly in MAMP 2.0.
+            //$slug = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+            $slug = mb_convert_encoding($string, 'ASCII');
         } elseif (function_exists('mb_convert_encoding')) {
             $slug = mb_convert_encoding($string, 'ASCII');
         } else {
