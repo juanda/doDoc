@@ -4,6 +4,7 @@ namespace Jazzyweb\doDocBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Jazzyweb\doDocBundle\Entity\Book
  *
