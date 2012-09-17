@@ -189,5 +189,4 @@ class DefaultControllerTest extends WebTestCase {
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
         $this->assertRegExp('/There is not a document/', $this->client->getResponse()->getContent());
     }
-
 }

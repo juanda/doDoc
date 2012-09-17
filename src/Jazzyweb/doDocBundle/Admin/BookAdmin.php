@@ -69,11 +69,14 @@ class BookAdmin extends Admin
     {
         $slugOld = $object->getSlug();
         
-        $this->easyBookService->get('slugger')->slugify($title);
-        $this->slugify($object);
+        $slugNew = $this->easyBookService->slugify($object->getName());
         
         
-        $this->easyBookService->moveBook($object);
+        $this->easyBookService->changeBookName($slugOld, $object->getName());     
+        $this->easyBookService->changeBookSlug($slugOld, $slugNew);
+           
+                
+        $object->setSlug($slugNew);
         
     }
 

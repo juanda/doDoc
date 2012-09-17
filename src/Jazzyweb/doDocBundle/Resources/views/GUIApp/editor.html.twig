@@ -165,12 +165,12 @@
 
         <!-- template for document list render -->
         <script type="text/template" id="t_document_list"> 
-            <select>
+            
                 <option></option>
                 <% _.each(documents, function(doc){ %>
                 <option id="<%= doc.name %>"><%= doc.name %></option>
                 <% }); %>
-            </select>
+            
         </script>
 
     {% endblock %}

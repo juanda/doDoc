@@ -4,6 +4,8 @@ namespace Jazzyweb\doDocBundle\Services;
 
 use Easybook\DependencyInjection\Application;
 use Easybook\Util\Toolkit;
+use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Yaml\Dumper;
 
 class EasyBookBridge {
 
@@ -56,7 +58,7 @@ class EasyBookBridge {
             ),
             'title' => $title,
         ));
-        
+
         return $slug;
     }
 
@@ -138,30 +140,28 @@ class EasyBookBridge {
     }
 
     public function getEditionNames($slug) {
-        
+
         $dir = $this->docHandler->getDocDir();
 
         $this->configurator = $this->appEasyBook->get('configurator');
         $this->validator = $this->appEasyBook->get('validator');
-        
+
         // validate book dir and add some useful values to the app configuration
         $bookDir = $this->validator->validateBookDir($slug, $dir);
-        
-        $this->appEasyBook->set('publishing.dir.book', $bookDir);        
+
+        $this->appEasyBook->set('publishing.dir.book', $bookDir);
         $this->appEasyBook->set('publishing.book.slug', $slug);
-                
+
         $this->configurator->loadBookConfiguration();
-        
+
         $editions = $this->appEasyBook->book('editions');
-        
+
         $editionNames = array();
-        foreach ($editions as $k=>$e)
-        {
+        foreach ($editions as $k => $e) {
             $editionNames[] = $k;
         }
-        
+
         return $editionNames;
-        
     }
 
     protected function setParamsForPublish($slug, $edition) {
@@ -195,15 +195,67 @@ class EasyBookBridge {
         // resolve book+edition configuration
         $this->configurator->resolveConfiguration();
     }
-    
-    public function sayHello()
-    {
-        return "Hello I'm EasyBookBridge service";
+
+    public function slugify($title) {
+        $slug = $this->appEasyBook->get('slugger')->slugify($title);
+
+        return $slug;
     }
-    
-    public function getAppEasyBook()
-    {
-        return $this->appEasyBook;
+
+    public function changeBookSlug($slugOld, $slugNew) {
+
+        $dir = EasyBookValidator::validateDirExistsAndWritable($this->docHandler->getDocDir());
+        $bookDir = $dir . '/' . $slugOld;
+
+        if($slugNew == $slugOld) return;
+        
+        if (file_exists($bookDir)) {
+
+            $this->appEasyBook->get('filesystem')->rename($slugOld, $slugNew);
+        } else {
+            throw new \Exception(sprintf(
+                            '%s does not exist', $bookDir)
+            );
+        }
+    }
+
+    public function changeBookName($slug, $name) {
+
+        $dir = EasyBookValidator::validateDirExistsAndWritable($this->docHandler->getDocDir());
+        
+        $bookDir = $dir . '/' . $slug;
+        
+        $configFile = $bookDir . '/config.yml';
+
+
+        $config = Yaml::parse($configFile );
+        
+        $config['book']['title'] = $name;
+        
+        $dumper = new Dumper();
+        
+        $yaml = $dumper->dump($config);
+        
+        file_put_contents($configFile, $yaml);               
+    }
+
+    protected function loadBookConfiguration($slug) {
+        $dir = $this->docHandler->getDocDir();
+
+        $this->configurator = $this->appEasyBook->get('configurator');
+        $this->validator = $this->appEasyBook->get('validator');
+
+        // validate book dir and add some useful values to the app configuration
+        $bookDir = $this->validator->validateBookDir($slug, $dir);
+
+        $this->appEasyBook->set('publishing.dir.book', $bookDir);
+        $this->appEasyBook->set('publishing.book.slug', $slug);
+
+        return $this->configurator->loadBookConfiguration();
+    }
+
+    public function sayHello() {
+        return "Hello I'm EasyBookBridge service";
     }
 
 }

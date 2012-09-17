@@ -24,8 +24,9 @@ window.bookTools = Backbone.View.extend({
     el: $('#book_tools'),
     
     events: {
-        "click #btn_config_book": "configTool",
-        "click .build_option":    "buildBook"     
+        "click  #btn_config_book": "configTool",
+        "click .build_option":    "buildBook"
+        
     },
     
     configTool: function(){
