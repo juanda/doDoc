@@ -143,6 +143,9 @@ class Book
      */
     public function getUsers() {
         return $this->users;
+    }       
+
+    public function __toString() {
+        return $this->getName();
     }
-        
 }

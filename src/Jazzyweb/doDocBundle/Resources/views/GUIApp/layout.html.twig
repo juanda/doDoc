@@ -49,9 +49,11 @@
             {% block navbar_left_items%}
 
             {% endblock %}
+                {% block navbar_right_items%}
                 <ul class="nav pull-right">
                     <li><button class="btn btn-danger" title="logout" href="#"><i class="icon-off"></i></button></li>
                 </ul>
+                {% endblock %}
             </div>
         </div>
     </div>
@@ -69,7 +71,7 @@
         <script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/bootstrap/js/bootstrap.min.js') }}"></script>    
         <script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/backbone/underscore.js') }}"></script>    
         <script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/backbone/backbone.js') }}"></script>    
-        
+
         <!-- For markitup
         <script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/markitup/markitup/jquery.markitup.js') }}"></script>    
         <script type="text/javascript" src="{{ asset('bundles/jazzywebdodoc/markitup/markitup/sets/markdown/set.js') }}"></script>    

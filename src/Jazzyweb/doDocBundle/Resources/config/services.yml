@@ -44,5 +44,5 @@ services:
        arguments:
           - null
           - Jazzyweb\doDocBundle\Entity\Book
-          - JazzywebdoDocBundle:Admin
+          - JazzywebdoDocBundle:BookAdmin
           - "@jazzyweb.dodoceasybookbridge"

@@ -1,0 +1,5 @@
+{% if admin.isGranted('EDITIONS', object)  %}
+    <a href="{{ path('JazzywebdoDocBundle_guiapp_editor', {'book': object.slug}) }}" class="edit_link" title="{{ 'write_book'|trans({}, 'doDocBundle') }}">
+        <img src="{{ asset('bundles/sonataadmin/famfamfam/pencil.png') }}" alt="{{ 'write_book'|trans({}, 'doDocBundle') }}" />
+    </a>
+{% endif %}

@@ -205,13 +205,15 @@ class EasyBookBridge {
     public function changeBookSlug($slugOld, $slugNew) {
 
         $dir = EasyBookValidator::validateDirExistsAndWritable($this->docHandler->getDocDir());
-        $bookDir = $dir . '/' . $slugOld;
 
-        if($slugNew == $slugOld) return;
-        
-        if (file_exists($bookDir)) {
+        if ($slugNew == $slugOld)
+            return;
 
-            $this->appEasyBook->get('filesystem')->rename($slugOld, $slugNew);
+        $bookDirOld = $dir . '/' . $slugOld;
+        $bookDirNew = $dir . '/' . $slugNew;
+        if (file_exists($bookDirOld)) {
+
+            $this->appEasyBook->get('filesystem')->rename($bookDirOld, $bookDirNew);
         } else {
             throw new \Exception(sprintf(
                             '%s does not exist', $bookDir)
@@ -222,21 +224,28 @@ class EasyBookBridge {
     public function changeBookName($slug, $name) {
 
         $dir = EasyBookValidator::validateDirExistsAndWritable($this->docHandler->getDocDir());
-        
+
         $bookDir = $dir . '/' . $slug;
-        
+
         $configFile = $bookDir . '/config.yml';
 
 
-        $config = Yaml::parse($configFile );
-        
+        $config = Yaml::parse($configFile);
+
         $config['book']['title'] = $name;
-        
+
         $dumper = new Dumper();
-        
+
         $yaml = $dumper->dump($config);
-        
-        file_put_contents($configFile, $yaml);               
+
+        file_put_contents($configFile, $yaml);
+    }
+    
+    public function deleteBook($slug){
+        $dir = EasyBookValidator::validateDirExistsAndWritable($this->docHandler->getDocDir());
+
+        $bookDir = $dir . '/' . $slug;
+        $this->appEasyBook->get('filesystem')->remove($bookDir);
     }
 
     protected function loadBookConfiguration($slug) {
@@ -257,5 +266,5 @@ class EasyBookBridge {
     public function sayHello() {
         return "Hello I'm EasyBookBridge service";
     }
-
+      
 }
