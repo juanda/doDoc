@@ -1,1 +1,29 @@
-{% extends 'SonataAdminBundle::standard_layout.html.twig' %}
+{% extends 'JazzywebdoDocBundle:GUIApp:layout.html.twig' %}
+
+{% block title %}
+{% trans %}Book editions management{% endtrans %}
+{% endblock %}
+
+{% block body %}
+
+<h1>{% trans %}Book editions management{% endtrans %}</h1>
+
+<ul class="thumbnails">
+    <li class="span4">
+        <a href="#" class="thumbnail">
+            <img src="http://placehold.it/100x100" alt="KUKU">
+        </a>
+    </li>
+    <li class="span4">
+        <a href="#" class="thumbnail">
+            <img src="http://placehold.it/300x200" alt="KUKA">
+        </a>
+    </li>
+    <li class="span4">
+        <a href="#" class="thumbnail">
+            <img src="http://placehold.it/300x200" alt="KUKE">
+        </a>
+    </li>
+    
+</ul>
+{% endblock %}
